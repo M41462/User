@@ -1,7 +1,6 @@
 #pragma once 
 #ifndef ALIEN_HPP
 #define ALIEN_HPP
-
 #include <raylib.h>
 #include "./Space.hpp"
 

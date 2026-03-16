@@ -1,72 +1,109 @@
+#include <ctype.h>
+#include <math.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #define MAX_BUFFER 1024
 
-long eval_expr(const char *input, bool *ok) {
-  char *ptr = (char *)input;
-  char *end;
+bool ValidInput(char *text, int size, int index) {
+  if (size < 1 || !text)
+    return false;
+  char c = text[index];
+  if (c == ' ')
+    return false;
+  bool hasDigits = isdigit((int)c);
+  bool isOperator = (c == '+' || c == '-' || c == '*' || c == '/');
+  return hasDigits || isOperator;
+}
 
-  long result = strtol(ptr, &end, 10);
-  if (ptr == end) {
-    *ok = false;
-    return 0;
+int output_result(char *text) {
+  if (!text)
+    return -1;
+
+  int result = 0;
+
+  int i = 0;
+  while (isdigit(text[i])) {
+    result = result * 10 + (int)(text[i] - '0');
+    i++;
   }
 
-  ptr = end;
-
-  while (*ptr) {
-    while (*ptr == ' ')
-      ptr++;
-
-    char op = *ptr;
-    if (op != '+' && op != '-')
-      break;
-    ptr++;
-
-    while (*ptr == ' ')
-      ptr++;
-
-    long value = strtol(ptr, &end, 10);
-    if (ptr == end) {
-      *ok = false;
-      return 0;
+  while (text[i] != '\0') {
+    char operator = text[i];
+    int number = 0;
+    i++;
+    while (isdigit(text[i])) {
+      number = number * 10 + (int)(text[i] - '0');
+      i++;
     }
 
-    if (op == '+')
-      result += value;
-    if (op == '-')
-      result -= value;
+    switch (operator) {
+    case '+':
+      result += number;
+      break;
+    case '-':
+      result -= number;
+      break;
+    case '*':
+      result *= number;
+      break;
+    case '/':
+      if (number == 0) {
+        fprintf(stderr, "Invalid Operation Devision by zero\n");
+        return -1;
+      }
 
-    ptr = end;
+      result /= number;
+      break;
+    default:
+      printf("Invalid Operation\n");
+      break;
+    }
   }
-
-  *ok = true;
   return result;
 }
 
-int main(void) {
-  printf("Simple Interpreter in C\n");
+char *user_input_string(char *text) {
+  int size = strlen(text);
+  if (size < 1) {
+    printf("Invalid input\n");
+    return NULL;
+  }
+  char *result = malloc(size + 1);
+  if (result == NULL) {
+    printf("Memory Allocation Failed\n");
+    return NULL;
+  }
+  int j = 0;
+  for (int i = 0; i < size; i++) {
+    char c = text[i];
+    if (!ValidInput(text, size, i))
+      continue;
 
-  char user_input[MAX_BUFFER];
+    result[j++] = c;
+  }
+  result[j] = '\0';
+  return result;
+}
 
+int main(int argc, char *argv[]) {
+
+  char text[MAX_BUFFER];
+  printf("Interpreter running ...\n");
   while (true) {
-    printf("\n>>>>> ");
-    fgets(user_input, MAX_BUFFER, stdin);
-    user_input[strcspn(user_input, "\n")] = '\0';
-
-    if (strcmp(user_input, "q") == 0 || strcmp(user_input, "Q") == 0)
+    printf(">>> ");
+    fgets(text, MAX_BUFFER, stdin);
+    bool exit = (strncmp(text, "exit", 4) == 0) || (strncmp(text, "e", 1) == 0);
+    if (exit) {
       break;
-
-    bool ok;
-    long result = eval_expr(user_input, &ok);
-
-    if (!ok) {
-      printf("Invalid expression\n");
-    } else {
-      printf("= %ld\n", result);
     }
+    char *input = user_input_string(text);
+    int result = output_result(input);
+    printf("input without spacing : %s\n", input);
+    printf("result of the first number : %d\n", result);
+    free(input);
   }
 
   return EXIT_SUCCESS;

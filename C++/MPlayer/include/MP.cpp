@@ -8,16 +8,7 @@
 #include <iostream>
 #include <string>
 
-void MPlayer::Set_Font() {
-  if (!font.loadFromFile("/usr/share/fonts/truetype/roboto/unhinted/RobotoTTF/"
-                         "Roboto-Bold.ttf")) {
-    std::cerr << "Failed to load font" << std::endl;
-    exit(1);
-  }
-}
-
 void MPlayer::Draw_Text(sf::RenderWindow &window) {
-  Set_Font();
   text.setFont(font);
   text.setCharacterSize(30);
   text.setFillColor(sf::Color::White);

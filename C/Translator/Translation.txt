@@ -1,9 +1,0 @@
-
-input text: ilyes
-output text: ilyes
-input text: hello wolrd
-output text: مرحبا العالم
-input text: hello
-output text: مرحبًا
-input text: ?????
-output text: ?????

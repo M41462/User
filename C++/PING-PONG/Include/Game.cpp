@@ -1,11 +1,14 @@
+#include <SDL2/SDL_render.h>
+extern "C" {
 #define MINIAUDIO_IMPLEMENTATION
+#include <miniaudio.h>
+}
+
 #include "Game.hpp"
 #include "Quit.hpp"
 #include "UI.hpp"
-#include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <iostream>
-#include <miniaudio/miniaudio.h>
 
 static ma_engine engine;
 static bool audio_init = false;
@@ -135,7 +138,6 @@ void Game::Show_Scores(unsigned int *score1, unsigned int *score2) {
 
   if (!gameFont) {
     gameFont = TTF_OpenFont("../Font/Font.ttf", 40);
-
     if (!gameFont)
       return;
   }
@@ -154,8 +156,13 @@ void Game::Show_Scores(unsigned int *score1, unsigned int *score2) {
         SDL_CreateTextureFromSurface(ui->renderer, surface1);
     if (texture1) {
       // Position Player 1 score on the right side
+      SDL_FRect dstRect1 = {static_cast<float>(SCREEN_WIDTH - surface1->w - 50),
+                            20.0f, static_cast<float>(surface1->w),
+                            static_cast<float>(surface1->h)};
+      SDL_RenderCopyF(ui->renderer, texture1, NULL, &dstRect1);
       SDL_DestroyTexture(texture1);
     }
+    SDL_FreeSurface(surface1);
   }
 
   // Render Player 2 score (left side)
@@ -166,8 +173,12 @@ void Game::Show_Scores(unsigned int *score1, unsigned int *score2) {
         SDL_CreateTextureFromSurface(ui->renderer, surface2);
     if (texture2) {
       // Position Player 2 score on the left side
+      SDL_FRect dstRect2 = {50.0f, 20.0f, static_cast<float>(surface2->w),
+                            static_cast<float>(surface2->h)};
+      SDL_RenderCopyF(ui->renderer, texture2, NULL, &dstRect2);
       SDL_DestroyTexture(texture2);
     }
+    SDL_FreeSurface(surface2);
   }
 }
 

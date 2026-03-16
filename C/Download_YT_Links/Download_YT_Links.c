@@ -5,12 +5,12 @@
 #include <unistd.h>
 
 #define MAX_PATH 1024
-
-bool install_dependencies(void) {
+#ifdef __linux__
+bool install_dependencies_for_linux(void) {
   if (system("which yt-dlp > /dev/null") != 0 ||
       system("which mpv > /dev/null") != 0) {
-    printf("Required tools not found. Install yt-dlp and mpv? (y/n): ");
-    string resp = get_string("Enter your choice");
+    printf("\nRequired tools not found. Install yt-dlp and mpv? (y/n): ");
+    string resp = get_string("\nEnter your choice : ");
     if (resp[0] == 'y' || resp[0] == 'Y') {
       if (system("sudo apt install -y yt-dlp mpv") != 0) {
         fprintf(stderr, "Installation failed. Please install manually.\n");
@@ -19,26 +19,71 @@ bool install_dependencies(void) {
       }
       printf("Dependencies installed successfully.\n");
     } else {
-      free(resp);
       return false;
     }
     free(resp);
   }
   return true;
 }
+#endif /* ifdef __linux__ */
+
+#ifdef _WIN32
+bool install_dependencies_for_windows(void) {
+
+  if (system("where yt-dlp > nul") != 0 || system("where mpv > nul") != 0) {
+
+    printf("Required tools not found. Install yt-dlp and mpv? (y/n): ");
+    string resp = get_string("Enter your choice");
+
+    if (resp[0] == 'y' || resp[0] == 'Y') {
+
+      if (system("winget install yt-dlp.yt-dlp > nul") != 0 ||
+          system("winget install -e --id mpv.net > nul") != 0) {
+
+        fprintf(stderr, "Installation failed. Please install manually.\n");
+        free(resp);
+        return false;
+      }
+
+      printf("Dependencies installed successfully.\n");
+
+    } else {
+      free(resp);
+      return false;
+    }
+
+    free(resp);
+  }
+
+  return true;
+}
+#endif
+
+#ifdef _WIN32
+#include <direct.h>
+#define MKDIR(path) _mkdir(path)
+#else
+#include <sys/stat.h>
+#define MKDIR(path) mkdir(path, 0777)
+#endif
 
 bool is_valid_link(const char *link) {
   return strstr(link, "youtube.com/watch?v=") || strstr(link, "youtu.be/");
 }
 
 void get_unique_output(char *buffer, const char *extension) {
-  for (int i = 0; i < 10; i++) {
-    snprintf(buffer, MAX_PATH, "%s/Music/video%i.%s", getenv("HOME"), i,
-             extension);
+  const char *dir_name = "Music";
+
+  MKDIR(dir_name);
+
+  for (int i = 0; i < 100; i++) {
+    snprintf(buffer, MAX_PATH, "./Music/video%i.%s", i, extension);
+
     if (access(buffer, F_OK) != 0)
       return;
   }
-  snprintf(buffer, MAX_PATH, "/tmp/default_output.%s", extension);
+
+  snprintf(buffer, MAX_PATH, "./Music/default_output.%s", extension);
 }
 
 void play_file(const char *path) {
@@ -142,9 +187,16 @@ void download_wav(void) {
 }
 
 void menu(void) {
-  if (!install_dependencies()) {
+
+#ifdef __linux__
+  if (!install_dependencies_for_linux())
     return;
-  }
+#endif
+
+#ifdef _WIN32
+  if (!install_dependencies_for_windows())
+    return;
+#endif
 
   do {
     printf("\n==== YouTube Media Downloader ====\n");
@@ -170,11 +222,11 @@ void menu(void) {
     case '4':
       printf("Goodbye!\n");
       return;
-      default:
+    default:
       printf("Invalid choice. Try again.\n");
-    }free(choice);
     }
-    while (true);
+    free(choice);
+  } while (true);
 }
 
 int main(void) {

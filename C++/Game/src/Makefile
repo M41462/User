@@ -1,7 +1,7 @@
 # Compiler and flags
-CXX = g++
+CXX = clang++
 CXXFLAGS = -std=c++11
-LDFLAGS = -lraylib  # Windows flags (adjust for Linux)
+LDFLAGS = -lraylib -lm  # Windows flags (adjust for Linux)
 
 # Source files (all .cpp files in the project)
 SRC = $(wildcard *.cpp)

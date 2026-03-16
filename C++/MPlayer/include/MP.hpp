@@ -1,8 +1,8 @@
 #pragma once
 #include "Visual.hpp"
+#include <SFML/Audio.hpp>
 #include <SFML/Audio/Music.hpp>
 #include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/Font.hpp>
@@ -37,7 +37,6 @@ private:
   sf::Text Mute_Text;
   sf::Text Play_Text;
   void Draw_Text(sf::RenderWindow &window);
-  void Set_Font();
   Visual Visual;
   const sf::Vector2i position = {350, 100};
   const sf::Color color = {20, 20, 30};

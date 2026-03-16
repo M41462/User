@@ -20,8 +20,10 @@ UI::UI() {
 }
 
 UI::~UI() {
-  if (renderer) SDL_DestroyRenderer(renderer);
-  if (window) SDL_DestroyWindow(window);
+  if (renderer)
+    SDL_DestroyRenderer(renderer);
+  if (window)
+    SDL_DestroyWindow(window);
   SDL_Quit();
 }
 
@@ -31,8 +33,9 @@ bool UI::Init() {
     return false;
   }
 
-  window = SDL_CreateWindow(WINDOW_TITLE, SDL_WINDOWPOS_CENTERED,
-                            SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
+  window =
+      SDL_CreateWindow(WINDOW_TITLE, SDL_WINDOWPOS_CENTERED,
+                       SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
   if (!window) {
     SDL_Log("Window could not be created! SDL error: %s", SDL_GetError());
     return false;
@@ -80,7 +83,7 @@ void UI::Draw_Rects(SDL_Renderer *renderer, SDL_FRect &Rect1,
 
   for (int i = -3; i < 4; i++) {
     SDL_RenderDrawLine(renderer, (int)(SCREEN_WIDTH / 2) + i, 0,
-                   (int)(SCREEN_WIDTH / 2) + i, SCREEN_HEIGHT);
+                       (int)(SCREEN_WIDTH / 2) + i, SCREEN_HEIGHT);
   }
 }
 
