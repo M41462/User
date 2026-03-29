@@ -9,98 +9,111 @@
 #include <string.h>
 #include <strings.h>
 
-#define API_KEY "7ea5bdf50c6ad5e1ec8b9e949d393a41"
 #define BASE_URL "https://api.openweathermap.org/data/2.5/weather"
+#define MAX_URL_LEN 512
+#define MAX_BUFFER_LEN 256
+#define NUM_ALGERIAN_CITIES 58
 
-struct string {
+typedef struct {
   char *buffer;
   size_t len;
-};
+} ResponseBuffer;
 
-FILE *fp;
+const char *algerian_cities[NUM_ALGERIAN_CITIES] = {
+    "Adrar",         "Chlef",
+    "Laghouat",      "Oum El Bouaghi",
+    "Batna",         "Bejaia",
+    "Biskra",        "Bechar",
+    "Blida",         "Bouira",
+    "Tamanrasset",   "Tebessa",
+    "Tlemcen",       "Tiaret",
+    "Tizi Ouzou",    "Algiers",
+    "Djelfa",        "Jijel",
+    "Setif",         "Saida",
+    "Skikda",        "Sidi Bel Abbes",
+    "Annaba",        "Guelma",
+    "Constantine",   "Medea",
+    "Mostaganem",    "Msila",
+    "Mascara",       "Ouargla",
+    "Oran",          "El Bayadh",
+    "Illizi",        "Bordj Bou Arreridj",
+    "Boumerdes",     "El Tarf",
+    "Tindouf",       "Tissemsilt",
+    "El Oued",       "Khenchela",
+    "Souk Ahras",    "Tipaza",
+    "Mila",          "Ain Defla",
+    "Naama",         "Ain Temouchent",
+    "Ghardaia",      "Relizane",
+    "Timimoun",      "Bordj Badji Mokhtar",
+    "Ouled Djellal", "Beni Abbes",
+    "In Salah",      "In Guezzam",
+    "Touggourt",     "Djanet",
+    "El Mghair",     "El Meniaa"};
 
-void Init_string(struct string *s) {
+bool init_response_buffer(ResponseBuffer *s) {
+  if (s == NULL) {
+    return false;
+  }
+
   s->len = 0;
   s->buffer = malloc(1);
+
   if (s->buffer == NULL) {
-    fprintf(stderr, "Failed Memory Allocation\n");
-    exit(EXIT_FAILURE);
+    fprintf(stderr, "Memory allocation failed\n");
+    return false;
   }
+
   s->buffer[0] = '\0';
+  return true;
 }
 
-size_t Write_Callback(void *contents, size_t size, size_t nmemb, void *userp) {
-  struct string *s = (struct string *)userp;
+size_t write_callback(void *contents, size_t size, size_t nmemb, void *userp) {
+  size_t new_len = ((ResponseBuffer *)userp)->len + size * nmemb;
+  ResponseBuffer *s = (ResponseBuffer *)userp;
 
-  size_t new_len = s->len + size * nmemb;
   char *tmp = realloc(s->buffer, new_len + 1);
   if (tmp == NULL) {
-    fprintf(stderr, "Failed Memory Allocation\n");
+    fprintf(stderr, "Memory reallocation failed\n");
     return 0;
   }
 
   s->buffer = tmp;
   memcpy(s->buffer + s->len, contents, size * nmemb);
-
   s->buffer[new_len] = '\0';
   s->len = new_len;
 
   return size * nmemb;
 }
 
-bool Is_Valid_Algerian_City(char *city_name) {
-  const char *Algerian_Cities[58] = {"Adrar",         "Chlef",
-                                     "Laghouat",      "Oum El Bouaghi",
-                                     "Batna",         "Bejaia",
-                                     "Biskra",        "Bechar",
-                                     "Blida",         "Bouira",
-                                     "Tamanrasset",   "Tebessa",
-                                     "Tlemcen",       "Tiaret",
-                                     "Tizi Ouzou",    "Algiers",
-                                     "Djelfa",        "Jijel",
-                                     "Setif",         "Saida",
-                                     "Skikda",        "Sidi Bel Abbes",
-                                     "Annaba",        "Guelma",
-                                     "Constantine",   "Medea",
-                                     "Mostaganem",    "Msila",
-                                     "Mascara",       "Ouargla",
-                                     "Oran",          "El Bayadh",
-                                     "Illizi",        "Bordj Bou Arreridj",
-                                     "Boumerdes",     "El Tarf",
-                                     "Tindouf",       "Tissemsilt",
-                                     "El Oued",       "Khenchela",
-                                     "Souk Ahras",    "Tipaza",
-                                     "Mila",          "Ain Defla",
-                                     "Naama",         "Ain Temouchent",
-                                     "Ghardaia",      "Relizane",
-                                     "Timimoun",      "Bordj Badji Mokhtar",
-                                     "Ouled Djellal", "Beni Abbes",
-                                     "In Salah",      "In Guezzam",
-                                     "Touggourt",     "Djanet",
-                                     "El Mghair",     "El Meniaa"};
+bool is_valid_algerian_city(const char *city_name) {
+  if (city_name == NULL) {
+    return false;
+  }
 
-  int Countries = sizeof(Algerian_Cities) / sizeof(Algerian_Cities[0]);
-  for (int i = 0; i < Countries; i++) {
-    if (strcasecmp(city_name, Algerian_Cities[i]) == 0) {
+  for (int i = 0; i < NUM_ALGERIAN_CITIES; i++) {
+    if (strcasecmp(city_name, algerian_cities[i]) == 0) {
       return true;
     }
   }
   return false;
 }
 
-void Get_Clear_Ouput(const char *json) {
-  float temperature = 0;
-  float humidity = 0.0f;
-  float pressure = 0.0f;
-  float wind_speed = 0.0f;
-  float cloudiness = 0.0f;
-  float latitude = 0.0f, longitude = 0.0f;
-  char description[256];
-  char city[256];
+void parse_weather_data(const char *json) {
+  if (json == NULL) {
+    fprintf(stderr, "No weather data to parse\n");
+    return;
+  }
+
+  float temperature = 0, humidity = 0, pressure = 0;
+  float wind_speed = 0, cloudiness = 0, latitude = 0, longitude = 0;
+  char description[MAX_BUFFER_LEN] = {0};
+  char city[MAX_BUFFER_LEN] = {0};
+
   char *temp_ptr = strstr(json, "\"temp\":");
   if (temp_ptr != NULL) {
     sscanf(temp_ptr, "\"temp\":%f", &temperature);
   }
+
   char *coord_ptr = strstr(json, "\"coord\"");
   if (coord_ptr != NULL) {
     char *lon_ptr = strstr(coord_ptr, "\"lon\":");
@@ -112,85 +125,136 @@ void Get_Clear_Ouput(const char *json) {
     if (lat_ptr != NULL) {
       sscanf(lat_ptr, "\"lat\":%f", &latitude);
     }
-    char *hum_ptr = strstr(json, "\"humidity\":");
-    if (hum_ptr != NULL) {
-      sscanf(hum_ptr, "\"humidity\":%f", &humidity);
-    }
-    char *pres_ptr = strstr(json, "\"pressure\":");
-    if (pres_ptr != NULL) {
-      sscanf(pres_ptr, "\"pressure\":%f", &pressure);
-    }
-    char *wind_ptr = strstr(json, "\"speed\":");
-    if (wind_ptr != NULL) {
-      sscanf(wind_ptr, "\"speed\":%f", &wind_speed);
-    }
-
-    char *desc_ptr = strstr(json, "\"description\":\"");
-    if (desc_ptr != NULL) {
-      sscanf(desc_ptr, "\"description\":\"%[^\"]\"", description);
-    }
-
-    char *cloud_ptr = strstr(json, "\"all\":");
-    if (cloud_ptr != NULL) {
-      sscanf(cloud_ptr, "\"all\":%f", &cloudiness);
-    }
-
-    char *city_ptr = strstr(json, "\"name\":\"");
-    if (city_ptr != NULL) {
-      sscanf(city_ptr, "\"name\":\"%[^\"]\"", city);
-    }
-    printf("City : %s\n", city);
-    printf("Temperature : %.2f°C\n", temperature);
-    printf("Humidity : %.2f%%\n", humidity);
-    printf("Pressure : %f\n", pressure);
-    printf("Wind Speed : %f\n", wind_speed);
-    printf("Coordinates: Latitude = %.2f, Longitude = %.2f\n", latitude,
-           longitude);
-    printf("Cloudiness : %f\n", cloudiness);
-    printf("Description : %s\n", description);
   }
+
+  char *hum_ptr = strstr(json, "\"humidity\":");
+  if (hum_ptr != NULL) {
+    sscanf(hum_ptr, "\"humidity\":%f", &humidity);
+  }
+
+  char *pres_ptr = strstr(json, "\"pressure\":");
+  if (pres_ptr != NULL) {
+    sscanf(pres_ptr, "\"pressure\":%f", &pressure);
+  }
+
+  char *wind_ptr = strstr(json, "\"speed\":");
+  if (wind_ptr != NULL) {
+    sscanf(wind_ptr, "\"speed\":%f", &wind_speed);
+  }
+
+  char *desc_ptr = strstr(json, "\"description\":\"");
+  if (desc_ptr != NULL) {
+    sscanf(desc_ptr, "\"description\":\"%[^\"]\"", description);
+  }
+
+  char *cloud_ptr = strstr(json, "\"all\":");
+  if (cloud_ptr != NULL) {
+    sscanf(cloud_ptr, "\"all\":%f", &cloudiness);
+  }
+
+  char *city_ptr = strstr(json, "\"name\":\"");
+  if (city_ptr != NULL) {
+    sscanf(city_ptr, "\"name\":\"%[^\"]\"", city);
+  }
+
+  printf("\nWeather Information:\n");
+  printf("City: %s\n", city);
+  printf("Temperature: %.2f°C\n", temperature);
+  printf("Humidity: %.2f%%\n", humidity);
+  printf("Pressure: %.2f hPa\n", pressure);
+  printf("Wind Speed: %.2f m/s\n", wind_speed);
+  printf("Coordinates: %.2f, %.2f\n", latitude, longitude);
+  printf("Cloudiness: %.2f%%\n", cloudiness);
+  printf("Description: %s\n", description);
 }
-void Send_Request(char *city_name) {
-  CURL *curl = curl_easy_init();
-  struct string respond;
-  if (curl == NULL) {
-    printf("Failed Init Curl\n");
-    exit(EXIT_FAILURE);
+
+void send_weather_request(const char *city_name) {
+  if (city_name == NULL) {
+    fprintf(stderr, "Invalid city name\n");
+    return;
   }
-  Init_string(&respond);
-  char url[256];
-  char *post_data = curl_easy_escape(curl, city_name, 0);
+
+  CURL *curl = curl_easy_init();
+  if (curl == NULL) {
+    fprintf(stderr, "CURL initialization failed\n");
+    return;
+  }
+
+  ResponseBuffer response;
+  if (!init_response_buffer(&response)) {
+    curl_easy_cleanup(curl);
+    return;
+  }
+
+  char *api_key = getenv("OPENWEATHER_API_KEY");
+  if (api_key == NULL) {
+    fprintf(stderr, "OPENWEATHER_API_KEY environment variable not set\n");
+    free(response.buffer);
+    curl_easy_cleanup(curl);
+    return;
+  }
+
+  char *encoded_city = curl_easy_escape(curl, city_name, 0);
+  if (encoded_city == NULL) {
+    fprintf(stderr, "URL encoding failed\n");
+    free(response.buffer);
+    curl_easy_cleanup(curl);
+    return;
+  }
+
+  char url[MAX_URL_LEN];
   snprintf(url, sizeof(url),
            "https://api.openweathermap.org/data/2.5/"
            "weather?q=%s,DZ&appid=%s&units=metric",
-           post_data, API_KEY);
-  curl_free(post_data);
+           encoded_city, api_key);
+
+  curl_free(encoded_city);
+
   curl_easy_setopt(curl, CURLOPT_URL, url);
-  curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, Write_Callback);
-  curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&respond);
-  curl_easy_setopt(curl, CURLOPT_USERAGENT, "libcurl-agent/1.0");
+  curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
+  curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&response);
+  curl_easy_setopt(curl, CURLOPT_USERAGENT, "WeatherApp/1.0");
+
   CURLcode result = curl_easy_perform(curl);
+
   if (result != CURLE_OK) {
-    fprintf(stderr, "Failed Curl\n");
-    exit(EXIT_FAILURE);
+    fprintf(stderr, "Request failed: %s\n", curl_easy_strerror(result));
   } else {
-    printf("Successfully sent request\n");
-    Get_Clear_Ouput(respond.buffer);
+    parse_weather_data(response.buffer);
   }
-  free(respond.buffer);
+
+  free(response.buffer);
   curl_easy_cleanup(curl);
 }
-int main(int argc, char *argv[]) {
-  char *city_name;
-  do {
-    city_name = get_string("Enter the city name: ");
-    system("clear");
-    if (Is_Valid_Algerian_City(city_name)) {
-      Send_Request(city_name);
-    } else {
-      printf("Invalid city name\n");
-      return EXIT_FAILURE; // TODO: return error code
-    }
-  } while (Is_Valid_Algerian_City(city_name));
+
+int main(void) {
+  curl_global_init(CURL_GLOBAL_ALL);
+
+  char *city_name = get_string("Enter the city name: ");
+
+  if (city_name == NULL) {
+    fprintf(stderr, "Failed to read city name\n");
+    curl_global_cleanup();
+    return EXIT_FAILURE;
+  }
+
+#ifdef _WIN32
+  system("cls");
+#else
+  system("clear");
+#endif
+
+  if (is_valid_algerian_city(city_name)) {
+    send_weather_request(city_name);
+  } else {
+    printf("Invalid city name. Please enter a valid Algerian city.\n");
+    free(city_name);
+    curl_global_cleanup();
+    return EXIT_FAILURE;
+  }
+
+  free(city_name);
+  curl_global_cleanup();
+
   return EXIT_SUCCESS;
 }

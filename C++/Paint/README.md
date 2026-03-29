@@ -1,26 +1,39 @@
-Project Overview
-A simple paint application built with SDL2 and C++ featuring brush drawing, color selection, and save functionality.
+# Paint
 
-Features
-Brush Drawing: Smooth circle brush with adjustable size
+Simple paint application with SDL2.
 
-Color Palette: 9 predefined colors for brush selection
+## Features
+- Smooth circle brush drawing
+- Adjustable brush size
+- 9 predefined colors
+- Save drawings to PNG
+- Clear canvas
 
-Save Functionality: Save drawings to PNG files
+## Requirements
+- SDL2 library
+- SDL2_image library
 
-Brush Size Control: Adjust brush size with arrow keys
+## Setup
+```bash
+cd Src
+make
+```
 
-Screen Clearing: Clear canvas with Enter key
+## Usage
+```bash
+./paint.exe  # Windows
+./paint      # Linux
+```
 
-Real-time Drawing: Continuous drawing with mouse movement
+## Controls
+- **Left Mouse Button**: Draw
+- **Arrow Up**: Increase brush size
+- **Arrow Down**: Decrease brush size
+- **S**: Save to PNG (Saves folder)
+- **Enter**: Clear canvas
+- **ESC/Q**: Exit
 
-Controls
-Left Mouse Button: Draw
-
-Arrow Up/Down: Increase/Decrease brush size
-
-S Key: Save drawing to PNG
-
-Enter Key: Clear canvas
-
-Escape/Q Key: Exit application
+## Notes
+- Saves stored in `Saves/` folder
+- Default brush radius is 8px
+- Window size: 800x600

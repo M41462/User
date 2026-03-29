@@ -1,32 +1,24 @@
-# Compiler
 CXX = clang++
-CXXFLAGS = -std=c++17 -Wall -I../Include
+CXXFLAGS = -std=c++17 -Wall -Wextra -I../Include
+LDFLAGS = -lSDL2 -lSDL2_image
 
-# Detect OS
-UNAME_S := $(shell uname -s)
-ifeq ($(UNAME_S),Linux)
-	LDFLAGS = -lSDL2 -lSDL2_image
-	RUN_CMD = ./$(EXEC)
-endif
-ifeq ($(OS),Windows_NT)
-	LDFLAGS = -lSDL2 -lSDL2_image
-	RUN_CMD = $(EXEC).exe
-endif
-
-# Source files
-SRCS = Brush.cpp Save.cpp UI.cpp main.cpp
+SRC = $(wildcard *.cpp)
 EXEC = paint
 
-# Default target: compile all at once
+ifeq ($(OS),Windows_NT)
+	EXEC := $(EXEC).exe
+	RM = del /f /q
+else
+	RM = rm -f
+endif
+
 all:
-	$(CXX) $(CXXFLAGS) $(SRCS) -o $(EXEC) $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) $(SRC) -o $(EXEC) $(LDFLAGS)
 
-# Clean
 clean:
-	rm -f $(EXEC) $(EXEC).exe
+	$(RM) $(EXEC)
 
-# Run
 run: all
-	$(RUN_CMD)
+	./$(EXEC)
 
 .PHONY: all clean run

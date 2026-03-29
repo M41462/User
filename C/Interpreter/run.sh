@@ -1,1 +1,0 @@
-clang ./main.c -o interpreter.exe 

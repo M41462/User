@@ -1,20 +1,24 @@
 CXX = clang++
-CXXFLAGS = -Wall -Werror -Wextra -std=c++17 
-LDFLAGS = -lSDL2 -lSDL2_image -lSDL2_ttf
-SOURCES = main.cpp ../Include/UI.cpp ../Include/Game.cpp ../Include/Data.cpp 
-OBJECTS = $(SOURCES:.cpp=.o)
-EXECUTABLE = main.exe
+CXXFLAGS = -std=c++17 -Wall -Wextra
+LDFLAGS = -lSDL2 -lSDL2_image -lSDL2_ttf -lm
 
-all: $(EXECUTABLE)
+SRCS = main.cpp ../Include/UI.cpp ../Include/Game.cpp ../Include/Data.cpp
+EXEC = main
 
-$(EXECUTABLE): $(OBJECTS)
-	$(CXX) $(OBJECTS) -o $@ $(LDFLAGS)
+ifeq ($(OS),Windows_NT)
+	EXEC := $(EXEC).exe
+	RM = del /f /q
+else
+	RM = rm -f
+endif
 
-%.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-run:
-	./main.exe
+all:
+	$(CXX) $(CXXFLAGS) $(SRCS) -o $(EXEC) $(LDFLAGS)
 
 clean:
-	rm -f $(OBJECTS) $(EXECUTABLE)
+	$(RM) $(EXEC)
+
+run: all
+	./$(EXEC)
+
+.PHONY: all clean run

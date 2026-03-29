@@ -1,50 +1,43 @@
-Heart Quiz Adventure ❤️
-A simple quiz game with Undertale-inspired visuals
+# Heart Quiz Adventure
 
-About
-Heart Quiz Adventure is a charming quiz game where you control a heart character and answer questions by moving to the correct choice. Test your knowledge against the clock in this pixel-style adventure!
+A quiz game with Undertale-inspired visuals.
 
-Features
-🎮 Simple arrow key controls
+## Features
+- 10 challenging questions
+- 60-second timer
+- Undertale-style heart character
+- Arrow key controls
+- Background music
+- Score ranking system
 
-❤️ Undertale-style heart character
+## Requirements
+- Raylib library
+- Font files in `../Font/`
+- Music file in `../Music/`
+- Heart image in `../Img/`
 
-📝 10 challenging questions across various topics
+## Setup
+```bash
+cd Include
+make
+cd ../Src
+./game.exe  # Windows
+./game      # Linux
+```
 
-⏱️ 60-second time limit
+## Controls
+- **Arrow Keys**: Move heart character
+- **Space**: Speed up text display
+- **Enter**: Reset text animation
 
-🎵 Soothing background music
+## Scoring
+- 8-10 correct: Excellent!
+- 5-7 correct: Good job!
+- 0-4 correct: Better luck next time!
 
-🏆 Performance ranking system
-
-How to Play
-Move the heart using arrow keys (↑, ↓, ←, →)
-
-Navigate to the correct answer among the A, B, C, D choices at the bottom
-
-Answer all 10 questions before time runs out
-
-Get your ranking based on your score:
-
-8-10: Excellent! 🎉
-
-5-7: Good job! 👍
-
-0-4: Better luck next time! 💪
-
-Controls
-Arrow Keys: Move your heart character
-
-SPACE: Speed up text display
-
-ENTER: Reset text animation
-
-Close Window: Exit game
-
-Requirements
-C++ compiler with C++11 support
-
-Raylib library installed
-
-Audio device for music
-
+## Questions Cover
+- Geography (capitals)
+- Math (factorials)
+- Science (planets, chemistry)
+- Literature (authors)
+- General knowledge

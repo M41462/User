@@ -1,21 +1,24 @@
 CXX = g++
-CXXFLAGS = -Wall -Wextra -Wpedantic  -g
-LDFLAGS = -lraylib
+CXXFLAGS = -std=c++17 -Wall -Wextra -O2
+LDFLAGS = -lraylib -lm
 
 SRC = main.cpp Player.cpp Quiz.cpp
-OBJ = $(SRC:.cpp=.o)
-TARGET = ../Src/game.exe
+EXEC = ../Src/game
 
-all: $(TARGET)
+ifeq ($(OS),Windows_NT)
+	EXEC := $(EXEC).exe
+	RM = del /f /q
+else
+	RM = rm -f
+endif
 
-$(TARGET): $(OBJ)
-	$(CXX) $(OBJ) -o $@ $(LDFLAGS)
-
-%.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-run: $(TARGET)
-	./$(TARGET)
+all:
+	$(CXX) $(CXXFLAGS) $(SRC) -o $(EXEC) $(LDFLAGS)
 
 clean:
-	rm -f $(OBJ) $(TARGET)
+	$(RM) $(EXEC)
+
+run: all
+	./$(EXEC)
+
+.PHONY: all clean run

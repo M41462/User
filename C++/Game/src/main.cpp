@@ -5,53 +5,84 @@
 #include <iostream>
 #include <raylib.h>
 #include <time.h>
-#include <unistd.h>
 
 #define WIDTH 700
 #define HEIGHT 650
-Sound Laser_Sound;
-void Laser_Sound_Effect() { PlaySound(Laser_Sound); }
 
-void Draw_Edges() {
+namespace {
+const float SHOOT_COOLDOWN = 0.3f;
+
+Sound g_laserSound;
+
+void PlayLaserSound() { PlaySound(g_laserSound); }
+
+void DrawEdges() {
   Rectangle rec = {0, 0, WIDTH, HEIGHT};
   DrawRectangleLinesEx(rec, 5, WHITE);
 }
 
-void Create_Window() {
-  bool Is_Valid_Sound_Effect = true;
-  InitWindow(WIDTH, HEIGHT, "SHOOTING GAME");
-  InitAudioDevice();
-  Game *game = new Game();
-
-  if (game == NULL) {
-    std::cerr << "Failed to create game instance" << std::endl;
-    exit(EXIT_FAILURE);
+bool LoadSounds() {
+  g_laserSound = LoadSound("../Sound/laser.ogg");
+  if (!Valid_Sound(g_laserSound)) {
+    std::cerr << "Failed to load laser.ogg sound" << std::endl;
+    return false;
   }
+  return true;
+}
 
-  Color Background = {29, 29, 27, 255};
+void Cleanup() {
+  if (Valid_Sound(g_laserSound)) {
+    UnloadSound(g_laserSound);
+  }
+  CloseAudioDevice();
+  CloseWindow();
+}
+} // namespace
+
+int main(void) {
+  srand(time(NULL));
+
   SetTargetFPS(60);
 
-  Laser_Sound = LoadSound("../Sound/laser.ogg");
-
-  if (!Valid_Sound(Laser_Sound)) {
-    std::cerr << "Failed to load laser.ogg" << std::endl;
-    Is_Valid_Sound_Effect = false;
-    if (!Is_Valid_Sound_Effect) {
-      exit(EXIT_FAILURE);
-    }
+  InitWindow(WIDTH, HEIGHT, "SHOOTING GAME");
+  if (!IsWindowReady()) {
+    std::cerr << "Failed to create window" << std::endl;
+    return EXIT_FAILURE;
   }
-  float shootCoolDown = 0.3f;
+
+  InitAudioDevice();
+  if (!IsAudioDeviceReady()) {
+    std::cerr << "Failed to initialize audio device" << std::endl;
+    CloseWindow();
+    return EXIT_FAILURE;
+  }
+
+  if (!LoadSounds()) {
+    Cleanup();
+    return EXIT_FAILURE;
+  }
+
+  Game *game = new (std::nothrow) Game();
+  if (!game) {
+    std::cerr << "Failed to create game instance" << std::endl;
+    Cleanup();
+    return EXIT_FAILURE;
+  }
+
+  const Color background = {29, 29, 27, 255};
   float shootTimer = 0.0f;
+
   while (!WindowShouldClose()) {
     BeginDrawing();
-    ClearBackground(Background);
-    Draw_Edges();
+    ClearBackground(background);
+    DrawEdges();
+
     if (!game->GameOver()) {
       shootTimer -= GetFrameTime();
       if (shootTimer <= 0.0f && IsKeyPressed(KEY_SPACE)) {
         game->Shoot();
-        Laser_Sound_Effect();
-        shootTimer = shootCoolDown;
+        PlayLaserSound();
+        shootTimer = SHOOT_COOLDOWN;
       }
       game->UpdateLaser();
       game->Movement();
@@ -60,15 +91,8 @@ void Create_Window() {
     game->Draw();
     EndDrawing();
   }
-  game = NULL;
-  delete game;
-  UnloadSound(Laser_Sound);
-  CloseAudioDevice();
-  CloseWindow();
-}
 
-int main(void) {
-  srand(time(NULL));
-  Create_Window();
+  delete game;
+  Cleanup();
   return EXIT_SUCCESS;
 }

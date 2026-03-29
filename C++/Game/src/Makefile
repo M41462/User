@@ -1,21 +1,23 @@
-# Compiler and flags
 CXX = clang++
-CXXFLAGS = -std=c++11
-LDFLAGS = -lraylib -lm  # Windows flags (adjust for Linux)
+CXXFLAGS = -std=c++11 -Wall -Wextra
+LDFLAGS = -lraylib -lm
 
-# Source files (all .cpp files in the project)
 SRC = $(wildcard *.cpp)
-EXEC = main.exe
-# Default target: compile everything at once
+EXEC = main
+
+ifeq ($(OS),Windows_NT)
+	EXEC := $(EXEC).exe
+	RM = del /f /q
+else
+	RM = rm -f
+endif
+
 all:
-	$(CXX) $(CXXFLAGS) -o $(EXEC) $(SRC) $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) $(SRC) -o $(EXEC) $(LDFLAGS)
 
-# Clean the executable
 clean:
-	del /f /q $(EXEC).exe 2>nul || true  # Windows
-	# For Linux, use: rm -f $(EXEC)
+	$(RM) $(EXEC)
 
-# Run the program
 run: all
 	./$(EXEC)
 

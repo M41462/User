@@ -1,0 +1,48 @@
+# Binaries
+*.exe
+*.out
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dylib
+
+# Video/Media files
+*.mp4
+*.mp3
+*.wav
+*.ogg
+
+# Build artifacts
+*.dll
+*.pdb
+*.ilk
+*.exp
+
+# IDE/Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# Dependency folders
+stb_image.h
+stb_image_write.h
+
+# Project specific
+Translation.txt
+Score.txt
+UserData.txt
+output.png

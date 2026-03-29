@@ -3,134 +3,200 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <time.h>
-#include <unistd.h>
+
 #define WIDTH 800
 #define HEIGHT 600
 #define MAX_SPEED 50
-#define Radius 8.52f
+#define RADIUS 8.52f
 #define SNAKE_BODY 1000
+#define INITIAL_SPEED 0.81f
+#define DIRECTION_SPEED 2.5f
+#define SPEED_INCREMENT 0.001f
 
-typedef struct Reg {
-  float posX;
-  float posY;
-  int REC_WIDTH;
-  int REC_HIGHT;
-} Reg;
+typedef struct {
+    float pos_x;
+    float pos_y;
+    int width;
+    int height;
+} Snake;
 
-int main() {
-  InitAudioDevice();
-  SetRandomSeed(time(NULL));
+typedef struct {
+    Vector2 direction;
+    Vector2 speed;
+    Vector2 body[SNAKE_BODY];
+    int body_length;
+    float score;
+    bool game_over;
+} GameState;
 
-  Reg Snake;
-  Snake.posX = 400;
-  Snake.posY = 300;
-  Snake.REC_WIDTH = 20;
-  Snake.REC_HIGHT = 20;
-
-  bool If_Continue = true;
-  Vector2 Snake_Length[SNAKE_BODY];
-  Snake_Length[0] = (Vector2){Snake.posX, Snake.posY};
-  int body_length = 1;
-
-  InitWindow(WIDTH, HEIGHT, "SNAKE GAME WINDOW");
-  SetTargetFPS(60);
-
-  int randomX = GetRandomValue(0, WIDTH - 50);
-  int randomY = GetRandomValue(0, HEIGHT - 50);
-  float score = 0;
-  bool If_Lose = false;
-
-  Vector2 Direction = {0, 0};
-  Vector2 Snake_Speed = {0.81f, 0.81f};
-
-  do {
-    Rectangle snakehead = {Snake.posX, Snake.posY, Snake.REC_WIDTH,
-                           Snake.REC_HIGHT};
-    Vector2 Circle_Position = {randomX, randomY};
-
-    ClearBackground(BLACK);
-    DrawText(TextFormat("Score : %1.f", score), 0, 0, 25, WHITE);
-
-    if (IsKeyPressed(KEY_DOWN) && Direction.y == 0) {
-      Direction = (Vector2){0, 2.5};
+void init_game_state(GameState *state, Snake *snake) {
+    if (state == NULL || snake == NULL) {
+        return;
     }
-    if (IsKeyPressed(KEY_UP) && Direction.y == 0) {
-      Direction = (Vector2){0, -2.5};
-    }
-    if (IsKeyPressed(KEY_LEFT) && Direction.x == 0) {
-      Direction = (Vector2){-2.5, 0};
-    }
-    if (IsKeyPressed(KEY_RIGHT) && Direction.x == 0) {
-      Direction = (Vector2){2.5, 0};
-    }
+    
+    snake->pos_x = WIDTH / 2.0f;
+    snake->pos_y = HEIGHT / 2.0f;
+    snake->width = 20;
+    snake->height = 20;
+    
+    state->direction = (Vector2){0, 0};
+    state->speed = (Vector2){INITIAL_SPEED, INITIAL_SPEED};
+    state->body[0] = (Vector2){snake->pos_x, snake->pos_y};
+    state->body_length = 1;
+    state->score = 0;
+    state->game_over = false;
+}
 
-    if (Snake.posX < 0 || Snake.posY < 0 ||
-        Snake.posX > WIDTH - Snake.REC_WIDTH ||
-        Snake.posY > HEIGHT - Snake.REC_HIGHT) {
-      If_Lose = true;
-    }
-
-    Snake.posX += Direction.x * Snake_Speed.x;
-    Snake.posY += Direction.y * Snake_Speed.y;
-
-    for (int i = body_length - 1; i > 0; i--) {
-      Snake_Length[i] = Snake_Length[i - 1];
-    }
-    Snake_Length[0] = (Vector2){Snake.posX, Snake.posY};
-
-    if (CheckCollisionCircleRec(Circle_Position, Radius, snakehead)) {
-      score += 50;
-      body_length++;
-      Snake_Speed.x = 0.82f + (score / 1000);
-      Snake_Speed.y = 0.82f + (score / 1000);
-
-      bool validPos = false;
-      while (!validPos) {
-        validPos = true;
-        randomX = GetRandomValue(0, WIDTH - 50);
-        randomY = GetRandomValue(0, HEIGHT - 50);
-
-        for (int i = 0; i < body_length; i++) {
-          if (CheckCollisionPointRec(
-                  (Vector2){randomX, randomY},
-                  (Rectangle){Snake_Length[i].x, Snake_Length[i].y,
-                              Snake.REC_WIDTH, Snake.REC_HIGHT})) {
-            validPos = false;
-            break;
-          }
+Vector2 generate_random_position(int width, int height, Snake *snake, GameState *state) {
+    Vector2 pos;
+    bool valid_position = false;
+    int max_attempts = 100;
+    int attempts = 0;
+    
+    while (!valid_position && attempts < max_attempts) {
+        pos.x = GetRandomValue(0, width - 50);
+        pos.y = GetRandomValue(0, height - 50);
+        
+        valid_position = true;
+        for (int i = 0; i < state->body_length; i++) {
+            if (CheckCollisionPointRec(pos, (Rectangle){
+                state->body[i].x, state->body[i].y, snake->width, snake->height})) {
+                valid_position = false;
+                break;
+            }
         }
-      }
+        attempts++;
     }
+    
+    return pos;
+}
 
-    for (int i = 0; i < body_length; i++) {
-      DrawRectangle(Snake_Length[i].x, Snake_Length[i].y, Snake.REC_WIDTH,
-                    Snake.REC_HIGHT, GREEN);
+void handle_input(GameState *state) {
+    if (state == NULL) {
+        return;
     }
-
-    if (If_Lose) {
-      DrawText("GAME OVER (PRESS ENTER TO CONTINUE)", 150, 100, 25, RED);
-
-      if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) {
-        body_length = 1;
-        Snake.posX = 400;
-        Snake.posY = 300;
-        score = 0;
-        If_Lose = false;
-        Snake_Speed = (Vector2){0.81f, 0.81f};
-        Direction = (Vector2){0, 0};
-      }
-
-      if (IsKeyPressed(KEY_ESCAPE) || IsKeyPressed(KEY_Q)) {
-        If_Continue = false;
-        break;
-      }
+    
+    if (IsKeyPressed(KEY_DOWN) && state->direction.y == 0) {
+        state->direction = (Vector2){0, DIRECTION_SPEED};
     }
+    if (IsKeyPressed(KEY_UP) && state->direction.y == 0) {
+        state->direction = (Vector2){0, -DIRECTION_SPEED};
+    }
+    if (IsKeyPressed(KEY_LEFT) && state->direction.x == 0) {
+        state->direction = (Vector2){-DIRECTION_SPEED, 0};
+    }
+    if (IsKeyPressed(KEY_RIGHT) && state->direction.x == 0) {
+        state->direction = (Vector2){DIRECTION_SPEED, 0};
+    }
+}
 
-    DrawCircle(randomX, randomY, Radius, RED);
-    EndDrawing();
-  } while (!WindowShouldClose() && If_Continue);
+void update_game_state(GameState *state, Snake *snake, Vector2 *food) {
+    if (state == NULL || snake == NULL || food == NULL) {
+        return;
+    }
+    
+    // Check wall collision
+    if (snake->pos_x < 0 || snake->pos_y < 0 ||
+        snake->pos_x > WIDTH - snake->width ||
+        snake->pos_y > HEIGHT - snake->height) {
+        state->game_over = true;
+        return;
+    }
+    
+    // Update snake position
+    snake->pos_x += state->direction.x * state->speed.x;
+    snake->pos_y += state->direction.y * state->speed.y;
+    
+    // Update body
+    for (int i = state->body_length - 1; i > 0; i--) {
+        state->body[i] = state->body[i - 1];
+    }
+    state->body[0] = (Vector2){snake->pos_x, snake->pos_y};
+    
+    // Check food collision
+    Rectangle snake_head = {snake->pos_x, snake->pos_y, snake->width, snake->height};
+    if (CheckCollisionCircleRec(*food, RADIUS, snake_head)) {
+        state->score += 50;
+        
+        if (state->body_length < SNAKE_BODY) {
+            state->body_length++;
+            state->speed.x = INITIAL_SPEED + (state->score * SPEED_INCREMENT);
+            state->speed.y = INITIAL_SPEED + (state->score * SPEED_INCREMENT);
+        }
+        
+        *food = generate_random_position(WIDTH, HEIGHT, snake, state);
+    }
+}
 
-  CloseAudioDevice();
-  CloseWindow();
-  return 0;
+void handle_game_over(GameState *state, Snake *snake) {
+    if (state == NULL || snake == NULL) {
+        return;
+    }
+    
+    if (state->game_over) {
+        DrawText("GAME OVER (PRESS ENTER TO CONTINUE)", 150, 100, 25, RED);
+        
+        if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) {
+            init_game_state(state, snake);
+        }
+        
+        if (IsKeyPressed(KEY_ESCAPE) || IsKeyPressed(KEY_Q)) {
+            // Will exit via WindowShouldClose
+        }
+    }
+}
+
+void draw_game(GameState *state, Snake *snake, Vector2 *food) {
+    if (state == NULL || snake == NULL || food == NULL) {
+        return;
+    }
+    
+    DrawText(TextFormat("Score : %1.f", state->score), 0, 0, 25, WHITE);
+    
+    // Draw snake body
+    for (int i = 0; i < state->body_length; i++) {
+        DrawRectangle(state->body[i].x, state->body[i].y, snake->width, snake->height, GREEN);
+    }
+    
+    // Draw food
+    DrawCircle(food->x, food->y, RADIUS, RED);
+    
+    // Draw game over text if needed
+    if (state->game_over) {
+        handle_game_over(state, snake);
+    }
+}
+
+int main(void) {
+    InitAudioDevice();
+    SetRandomSeed(time(NULL));
+    
+    Snake snake;
+    GameState state;
+    init_game_state(&state, &snake);
+    
+    InitWindow(WIDTH, HEIGHT, "Snake Game");
+    SetTargetFPS(60);
+    
+    Vector2 food = generate_random_position(WIDTH, HEIGHT, &snake, &state);
+    
+    while (!WindowShouldClose()) {
+        BeginDrawing();
+        ClearBackground(BLACK);
+        
+        handle_input(&state);
+        
+        if (!state.game_over) {
+            update_game_state(&state, &snake, &food);
+        }
+        
+        draw_game(&state, &snake, &food);
+        
+        EndDrawing();
+    }
+    
+    CloseAudioDevice();
+    CloseWindow();
+    
+    return 0;
 }

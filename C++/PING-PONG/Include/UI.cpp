@@ -1,8 +1,28 @@
 #include "UI.hpp"
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 #include <SDL2/SDL_render.h>
+#include <SDL2/SDL_surface.h>
 #include <cmath>
 #include <iostream>
+#include <string>
+
+namespace {
+constexpr int RECT_WIDTH = 18;
+constexpr int RECT_HEIGHT_MULT = 10;
+constexpr int BALL_RADIUS = 25;
+constexpr float BALL_VELOCITY = 2.5f;
+constexpr int AI_MOVE_SPEED = 10;
+} // namespace
+
+static inline bool Load_Icon(SDL_Surface *&icon, const std::string file_path) {
+  icon = IMG_Load(file_path.c_str());
+  if (icon == nullptr) {
+    std::cout << "Failed to load icon image: " << IMG_GetError() << std::endl;
+    return false;
+  }
+  return true;
+}
 
 UI::UI() {
   score.player_score1 = 0;
@@ -20,10 +40,13 @@ UI::UI() {
 }
 
 UI::~UI() {
-  if (renderer)
+  if (renderer) {
     SDL_DestroyRenderer(renderer);
-  if (window)
+  }
+  if (window) {
     SDL_DestroyWindow(window);
+  }
+  IMG_Quit();
   SDL_Quit();
 }
 
@@ -47,27 +70,32 @@ bool UI::Init() {
     return false;
   }
 
+  if (IMG_Init(IMG_INIT_PNG) == 0) {
+    SDL_Log("SDL_image could not initialize! Error: %s", IMG_GetError());
+    return false;
+  }
+
   return true;
 }
 
 void UI::Init_Rects(SDL_FRect *Rect1, SDL_FRect *Rect2) {
-  Rect1->w = 18;
-  Rect1->h = Rect1->w * 10;
-  Rect1->x = SCREEN_WIDTH - Rect1->w - 10;
-  Rect1->y = (float)SCREEN_HEIGHT / 2 - 85;
+  Rect1->w = RECT_WIDTH;
+  Rect1->h = static_cast<float>(RECT_WIDTH * RECT_HEIGHT_MULT);
+  Rect1->x = static_cast<float>(SCREEN_WIDTH) - Rect1->w - 10.0f;
+  Rect1->y = static_cast<float>(SCREEN_HEIGHT) / 2.0f - 85.0f;
 
-  Rect2->w = 18;
-  Rect2->h = Rect1->w * 10;
-  Rect2->x = 10;
-  Rect2->y = (float)SCREEN_HEIGHT / 2 - 85;
+  Rect2->w = RECT_WIDTH;
+  Rect2->h = static_cast<float>(RECT_WIDTH * RECT_HEIGHT_MULT);
+  Rect2->x = 10.0f;
+  Rect2->y = static_cast<float>(SCREEN_HEIGHT) / 2.0f - 85.0f;
 }
 
 void UI::Init_Ball(struct Ball *ball) {
-  ball->x = (float)SCREEN_WIDTH / 2;
-  ball->y = (float)SCREEN_HEIGHT / 2 - 20;
-  ball->velX = 2.5f;
-  ball->velY = 2.5f;
-  ball->radius = 25;
+  ball->x = static_cast<float>(SCREEN_WIDTH) / 2.0f;
+  ball->y = static_cast<float>(SCREEN_HEIGHT) / 2.0f - 20.0f;
+  ball->velX = BALL_VELOCITY;
+  ball->velY = BALL_VELOCITY;
+  ball->radius = BALL_RADIUS;
   ball->IsMoving = false;
   ball->BallHitWall = false;
 }
@@ -81,23 +109,23 @@ void UI::Draw_Rects(SDL_Renderer *renderer, SDL_FRect &Rect1,
   SDL_RenderDrawRectF(renderer, &Rect1);
   SDL_RenderDrawRectF(renderer, &Rect2);
 
+  const int centerX = SCREEN_WIDTH / 2;
   for (int i = -3; i < 4; i++) {
-    SDL_RenderDrawLine(renderer, (int)(SCREEN_WIDTH / 2) + i, 0,
-                       (int)(SCREEN_WIDTH / 2) + i, SCREEN_HEIGHT);
+    SDL_RenderDrawLine(renderer, centerX + i, 0, centerX + i, SCREEN_HEIGHT);
   }
 }
 
 void UI::Draw_Ball(SDL_Renderer *renderer, struct Ball ball) {
   SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 
-  while (ball.radius > 0) {
-    for (int i = 0; i < 360; i++) {
-      float angle = i * M_PI / 180.f;
-      int x = (int)(ball.x + ball.radius * cos(angle));
-      int y = (int)(ball.y + ball.radius * sin(angle));
+  const int maxRadius = static_cast<int>(ball.radius);
+  for (int r = maxRadius; r > 0; r--) {
+    for (int angle = 0; angle < 360; angle++) {
+      const float rad = angle * M_PI / 180.0f;
+      const int x = static_cast<int>(ball.x + r * std::cos(rad));
+      const int y = static_cast<int>(ball.y + r * std::sin(rad));
       SDL_RenderDrawPoint(renderer, x, y);
     }
-    ball.radius--;
   }
 }
 
@@ -105,10 +133,10 @@ void UI::Update_Rect(SDL_FRect &Rect, SDL_Event &event) {
   if (event.type == SDL_KEYDOWN) {
     switch (event.key.keysym.sym) {
     case SDLK_UP:
-      Rect.y -= 15;
+      Rect.y -= 15.0f;
       break;
     case SDLK_DOWN:
-      Rect.y += 15;
+      Rect.y += 15.0f;
       break;
     default:
       break;
@@ -117,15 +145,17 @@ void UI::Update_Rect(SDL_FRect &Rect, SDL_Event &event) {
 }
 
 void UI::Handle_AI_Movement(SDL_FRect &Rect2, struct Ball &ball) {
-  if (Rect2.y > ball.y + ball.radius)
-    Rect2.y -= 10;
-  else if (Rect2.y < ball.y - ball.radius)
-    Rect2.y += 10;
+  if (Rect2.y > ball.y + ball.radius) {
+    Rect2.y -= AI_MOVE_SPEED;
+  } else if (Rect2.y < ball.y - ball.radius) {
+    Rect2.y += AI_MOVE_SPEED;
+  }
 }
 
 void UI::Update_Ball(struct Ball *ball) {
-  if (!ball->IsMoving)
+  if (!ball->IsMoving) {
     return;
+  }
 
   ball->x += ball->velX;
   ball->y += ball->velY;
@@ -135,7 +165,7 @@ void UI::Update_Ball(struct Ball *ball) {
     ball->velY = -ball->velY;
     ball->BallHitWall = true;
   } else if (ball->y + ball->radius > SCREEN_HEIGHT) {
-    ball->y = SCREEN_HEIGHT - ball->radius;
+    ball->y = static_cast<float>(SCREEN_HEIGHT) - ball->radius;
     ball->velY = -ball->velY;
     ball->BallHitWall = true;
   } else {
@@ -152,4 +182,9 @@ void UI::Set_Window() {
 
   Init_Ball(&ball);
   Init_Rects(&Rect1, &Rect2);
+  const std::string file_path = "../Img/PIPO.png";
+  if (Load_Icon(icon, file_path)) {
+    SDL_SetWindowIcon(window, icon);
+    SDL_FreeSurface(icon);
+  }
 }

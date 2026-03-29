@@ -1,34 +1,40 @@
-#include <raylib.h>
-#include "Space.hpp"
-#include "alien.hpp"
 
 #ifndef GAME_HPP
 #define GAME_HPP
-extern Sound Alien_Sound;
-extern bool Is_Destroyed;
+
+#include "Space.hpp"
+#include "alien.hpp"
+#include <raylib.h>
 
 class Game {
 public:
   Game();
   ~Game();
+
   void Movement();
   void Draw();
   void IsCollision();
   void Destroy();
   int Game_Score();
-  bool IsSpaceShipHitByAlienLaser(); 
+  bool IsSpaceShipHitByAlienLaser();
   int Best_Score();
   void Shoot();
   bool GameOver();
   void UpdateLaser();
+
 private:
+  void loadFont();
+  static bool ValidFont(const Font &font) { return font.texture.id != 0; }
+
   SpaceShip spaceShip;
+  Alien alien;
+  Font font = {0};
+  int Score = 0;
+
   bool alienHit1 = false;
-  Font font = LoadFont("../Font/Score_Font.ttf");
   bool alienHit2 = false;
   bool alienHit3 = false;
-  Alien alien;
-  int Score = 0;
+
   float gameOverTimer = 0.0f;
   bool gameOverTriggered = false;
 };

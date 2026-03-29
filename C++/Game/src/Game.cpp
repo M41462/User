@@ -1,68 +1,88 @@
 #include "./Game.hpp"
-#include <unistd.h>
 #include "./alien.hpp"
-#include <iostream>
 #include "Space.hpp"
 #include "common.hpp"
+#include <cstdio>
+#include <iostream>
 
-Sound Alien_Destroyed;
-bool Is_Destroyed = false;
+namespace {
+Sound g_explosionSound;
+bool g_isDestroyed = false;
+
+bool isSoundValid(Sound sound) { return sound.frameCount > 0; }
+} // namespace
+
+Game::Game() {
+  loadFont();
+  alien.Init_Alien();
+  alien.Init_Alien_Laser();
+
+  g_explosionSound = LoadSound("../Sound/explosion.ogg");
+  if (!isSoundValid(g_explosionSound)) {
+    std::cerr << "Warning: Failed to load explosion.ogg" << std::endl;
+  }
+}
+
 Game::~Game() {
   Destroy();
   alien.Destroy_Alien();
-  UnloadFont(font);
-  spaceShip.~SpaceShip();
-  UnloadSound(Alien_Destroyed);
+  if (isSoundValid(g_explosionSound)) {
+    UnloadSound(g_explosionSound);
+  }
+  if (ValidFont(font)) {
+    UnloadFont(font);
+  }
 }
 
-bool Valid_Font(Font font) {
-  if (font.texture.id == 0) {
-    return false;
+void Game::loadFont() {
+  font = LoadFont("../Font/Score_Font.ttf");
+  if (!ValidFont(font)) {
+    std::cerr << "Warning: Failed to load font, using default" << std::endl;
   }
-  return true;
 }
 
 bool Game::GameOver() {
   return alien.All_Alien_Destroyed() || spaceShip.Lives <= 0;
 }
-Game::Game() {
-  alien.Init_Alien();
-  alien.Init_Alien_Laser();
-  Alien_Destroyed = LoadSound("../Sound/explosion.ogg");
-  if (!Valid_Sound(Alien_Destroyed)) {
-    std::cerr << "Failed to load explosion.ogg" << std::endl;
-  }
-}
+
 void Game::IsCollision() {
   spaceShip.IsCollision();
+
   if (alien.IsAlienShotes(spaceShip.laser)) {
     spaceShip.laser.Active = false;
-    Is_Destroyed = true;
-    if (Is_Destroyed) {
-      PlaySound(Alien_Destroyed);
+    if (!g_isDestroyed) {
+      g_isDestroyed = true;
+      if (isSoundValid(g_explosionSound)) {
+        PlaySound(g_explosionSound);
+      }
     }
     Score += 10;
   }
 
   if (IsSpaceShipHitByAlienLaser()) {
-    PlaySound(Alien_Destroyed);
+    if (isSoundValid(g_explosionSound)) {
+      PlaySound(g_explosionSound);
+    }
     spaceShip.Lives--;
     spaceShip.laser.Active = false;
   }
 }
+
 bool Game::IsSpaceShipHitByAlienLaser() {
-  Rectangle shipRect = {spaceShip.position.x, spaceShip.position.y,
-                        (float)spaceShip.image.width,
-                        (float)spaceShip.image.height};
+  const Rectangle shipRect = {spaceShip.position.x, spaceShip.position.y,
+                              static_cast<float>(spaceShip.image.width),
+                              static_cast<float>(spaceShip.image.height)};
+
   for (int i = 0; i < 14; i++) {
-    if (alien.alien_laser[i].Active) {
-      Rectangle laserRect = {alien.alien_laser[i].position.x,
-                             alien.alien_laser[i].position.y, 3,
-                             15}; 
-      if (CheckCollisionRecs(shipRect, laserRect)) {
-        alien.alien_laser[i].Active = false;
-        return true;
-      }
+    if (!alien.alien_laser[i].Active)
+      continue;
+
+    const Rectangle laserRect = {alien.alien_laser[i].position.x,
+                                 alien.alien_laser[i].position.y, 3.0f, 15.0f};
+
+    if (CheckCollisionRecs(shipRect, laserRect)) {
+      alien.alien_laser[i].Active = false;
+      return true;
     }
   }
   return false;
@@ -78,6 +98,7 @@ void Game::Movement() { spaceShip.Move(); }
 void Game::Draw() {
   spaceShip.Draw();
   alien.Draw_Alien_Laser();
+
   if (!alienHit1) {
     alien.Draw_Alien1();
   }
@@ -87,6 +108,7 @@ void Game::Draw() {
   if (!alienHit3) {
     alien.Draw_Alien3();
   }
+
   if (GameOver()) {
     DrawText("GAME OVER", 200, 200, 40, RED);
     DrawText(TextFormat("Score : %i", Best_Score()), 200, 250, 40, RED);
@@ -94,32 +116,29 @@ void Game::Draw() {
       gameOverTimer = 2.0f;
       gameOverTriggered = true;
     }
-    if (gameOverTriggered) {
-      gameOverTimer -= GetFrameTime();
-      if (gameOverTimer <= 0.0f) {
-        exit(EXIT_SUCCESS);
-      }
-    }
   } else {
-    Vector2 Lives_Position = {(float)GetScreenWidth() - 150, 15};
-    DrawTextEx(font, TextFormat("Lives : %i", spaceShip.Lives), Lives_Position,
-               25, 5, RED);
-    if (Valid_Font(font)) {
-      Vector2 Font_Position = Vector2{(float)GetScreenWidth() / 2 - 75, 15};
-      DrawTextEx(font, TextFormat("Score : %i", Game_Score()), Font_Position,
-                 25, 5, RED);
+    const Vector2 livesPos = {static_cast<float>(GetScreenWidth()) - 150.0f,
+                              15.0f};
+    DrawTextEx(font, TextFormat("Lives : %i", spaceShip.Lives), livesPos, 25, 5,
+               RED);
+
+    if (ValidFont(font)) {
+      const Vector2 scorePos = {
+          static_cast<float>(GetScreenWidth()) / 2.0f - 75.0f, 15.0f};
+      DrawTextEx(font, TextFormat("Score : %i", Game_Score()), scorePos, 25, 5,
+                 RED);
     } else {
-      std::cout << "Failed to load font" << std::endl;
-      exit(EXIT_FAILURE);
+      DrawText(TextFormat("Score : %i", Game_Score()),
+               GetScreenWidth() / 2 - 75, 15, 25, RED);
     }
   }
 }
 
 void Game::Destroy() {
-  if (Is_Destroyed) {
+  if (ValidFont(font)) {
     UnloadFont(font);
-    alien.Destroy_Alien();
   }
+  alien.Destroy_Alien();
 }
 
 void Game::UpdateLaser() {
@@ -128,23 +147,29 @@ void Game::UpdateLaser() {
 }
 
 int Game::Game_Score() { return Score; }
-int Game::Best_Score() {
 
-  static int New_Score = -1;
-  if (New_Score == -1) {
+int Game::Best_Score() {
+  static int cachedBestScore = -1;
+
+  if (cachedBestScore == -1) {
     FILE *file = fopen("Score.txt", "r");
-    if (file == NULL) {
-      New_Score = 0;
+    if (file) {
+      if (fscanf(file, "%d", &cachedBestScore) != 1) {
+        cachedBestScore = 0;
+      }
+      fclose(file);
     } else {
-      fscanf(file, "%d", &New_Score);
-      fclose(file);
+      cachedBestScore = 0;
     }
-    if (New_Score < Score) {
-      New_Score = Score;
-      FILE *file = fopen("Score.txt", "w");
-      fprintf(file, "%d", New_Score);
-      fclose(file);
+
+    if (cachedBestScore < Score) {
+      cachedBestScore = Score;
+      FILE *writeFile = fopen("Score.txt", "w");
+      if (writeFile) {
+        fprintf(writeFile, "%d", cachedBestScore);
+        fclose(writeFile);
+      }
     }
   }
-  return New_Score;
+  return cachedBestScore;
 }

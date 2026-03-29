@@ -1,0 +1,18 @@
+# Compiled executable
+*.exe
+*.o
+*.a
+*.so
+*.dll
+
+# Build artifacts
+build/
+dist/
+out/
+
+# Environment variables
+.env
+
+# OS generated files
+.DS_Store
+Thumbs.db

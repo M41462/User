@@ -6,24 +6,33 @@ void Laser::Init_Laser(Vector2 startPos) {
 }
 
 void Laser::Update_Laser() {
-  if (Active) {
-    position.y -= 10;
+  if (!Active) {
+    return;
+  }
 
-    if (position.y < 0) {
-      Active = false;
-    }
+  position.y -= LASER_SPEED;
+
+  if (position.y < 0) {
+    Active = false;
   }
 }
+
 void Laser::Draw_Laser() {
-  if (Active) {
-    DrawRectangle(position.x, position.y, 3, 15, YELLOW);
+  if (!Active) {
+    return;
   }
+  DrawRectangle(static_cast<int>(position.x), static_cast<int>(position.y),
+                LASER_WIDTH, LASER_HEIGHT, YELLOW);
 }
 
-bool Laser::IsCollision(Rectangle rec){
-  if (!Active){
-    return false; 
+bool Laser::IsCollision(Rectangle rec) {
+  if (!Active) {
+    return false;
   }
-  Rectangle Laser_Rec = {position.x, position.y, 3, 15};
-  return CheckCollisionRecs(Laser_Rec , rec); 
+
+  const Rectangle laserRec = {position.x, position.y,
+                              static_cast<float>(LASER_WIDTH),
+                              static_cast<float>(LASER_HEIGHT)};
+
+  return CheckCollisionRecs(laserRec, rec);
 }

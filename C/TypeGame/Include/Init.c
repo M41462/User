@@ -126,7 +126,7 @@ void Draw_Box(Rectangle Box, Color Box_Color) {
 void Init_Text(int level) {
   prompt[0] = '\0';
 
-  GenerateWordList(prompt, level);
+  generate_word_list(prompt, level);
 
   strncpy(Text, prompt, MAX_INPUT_CHARS);
   Text[MAX_INPUT_CHARS] = '\0';
@@ -293,15 +293,23 @@ void Init_Level() {
 }
 
 void Run_TypeGame() {
-  FILE *filepointer;
-  Init_File(filepointer);
+  FILE *filepointer = NULL;
+  Init_File(&filepointer);
   Init_Window();
+  
   if (seconds <= 0)
     seconds = 0.001f;
+    
   float accuracy = Accuracy(Text, input);
   double wps = Word_Per_Second(LetterCounter, seconds);
+  
+#ifdef _WIN32
+  system("cls");
+#else
   system("clear");
-  Write_File(filepointer, accuracy, wps, Wrong_Words);
+#endif
+  
+  Write_File(&filepointer, accuracy, wps, Wrong_Words);
   printf("View User File Data : \n");
-  Read_File(filepointer);
+  Read_File(&filepointer);
 }

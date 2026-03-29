@@ -1,18 +1,19 @@
 
 #pragma once
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_error.h>
 #include <SDL2/SDL_events.h>
+#include <SDL2/SDL_image.h>
 #include <SDL2/SDL_keycode.h>
 #include <SDL2/SDL_rect.h>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_surface.h>
 #include <SDL2/SDL_video.h>
 
-static constexpr unsigned int SCREEN_WIDTH = 750;
-static constexpr unsigned int SCREEN_HEIGHT = 850;
-const char WINDOW_TITLE[] = "Ping-Pong Game";
-
+constexpr unsigned int SCREEN_WIDTH = 750;
+constexpr unsigned int SCREEN_HEIGHT = 850;
+static const char *WINDOW_TITLE = "Ping-Pong Game";
 #define M_PI 3.14159265358979323846
 
 struct Ball {
@@ -36,8 +37,8 @@ struct Winner {
 };
 
 class UI {
-  friend class Game;      // Get UI functions inside the Game class
-  friend class Game_Data; // Get UI functions inside the Game_Data class
+  friend class Game;
+  friend class Game_Data;
 
 public:
   void SetContext(SDL_Window *window, SDL_Renderer *renderer) {
@@ -66,9 +67,9 @@ private:
   struct Winner winner;
   struct Ball ball;
   struct Score score;
-  SDL_FRect Rect1;
-  SDL_FRect Rect2;
   SDL_Surface *icon;
   SDL_Window *window;
   SDL_Renderer *renderer;
+  SDL_FRect Rect1;
+  SDL_FRect Rect2;
 };

@@ -3,202 +3,243 @@
 #include <raylib.h>
 #include <stdio.h>
 #include <stdlib.h>
+
 #define WIDTH 800
 #define HEIGHT 600
-typedef enum { SIN = 1, COS, TAN, EXP, LN, X, SQUARE, ABS } My_Functions;
+#define SCALE_FACTOR 50.0f
+#define PLOT_SCALE 100.0f
+#define TICK_SIZE 5
 
-void DrawAxes();
-void Draw_Abs();
-void Draw_Exp();
-void Draw_Square();
-void Draw_Sin();
-void Draw_Tan();
-void Draw_X();
-void Draw_Cos();
-void Draw_Ln();
+typedef enum {
+    FUNCTION_SIN = 1,
+    FUNCTION_COS,
+    FUNCTION_TAN,
+    FUNCTION_EXP,
+    FUNCTION_LN,
+    FUNCTION_X,
+    FUNCTION_SQUARE,
+    FUNCTION_ABS
+} FunctionType;
+
+void draw_axes(void);
+void draw_sin(void);
+void draw_cos(void);
+void draw_tan(void);
+void draw_exp(void);
+void draw_ln(void);
+void draw_x(void);
+void draw_square(void);
+void draw_abs(void);
+void display_menu(void);
+FunctionType get_function_choice(void);
+void draw_function(FunctionType func);
 
 int main(void) {
-  Color BackGround = {0, 0, 0, 255};
-  My_Functions function;
-  do {
-    printf("\n----Menu----\n");
-    printf("1 - sin \n");
-    printf("2 - cos \n");
-    printf("3 - tan \n");
-    printf("4 - e^x \n");
-    printf("5 - ln \n");
-    printf("6 - x \n");
-    printf("7 - x^2 \n");
+    Color background = {0, 0, 0, 255};
+    
+    display_menu();
+    FunctionType function = get_function_choice();
+    
+    InitWindow(WIDTH, HEIGHT, "Functions");
+    SetTargetFPS(60);
+    
+    while (!WindowShouldClose()) {
+        BeginDrawing();
+        ClearBackground(background);
+        draw_axes();
+        draw_function(function);
+        EndDrawing();
+    }
+    
+    CloseWindow();
+    return 0;
+}
+
+void display_menu(void) {
+    printf("\n---- Function Plotter ----\n");
+    printf("1 - sin(x)\n");
+    printf("2 - cos(x)\n");
+    printf("3 - tan(x)\n");
+    printf("4 - e^x\n");
+    printf("5 - ln(x)\n");
+    printf("6 - x\n");
+    printf("7 - x^2\n");
     printf("8 - |x|\n");
-
-    function = get_int("Enter your integer value (1 - 8) : ");
-  } while (function < 0 || function > 8);
-  InitWindow(WIDTH, HEIGHT, "Functions");
-  SetTargetFPS(60);
-  while (!WindowShouldClose()) {
-    BeginDrawing();
-    ClearBackground(BackGround);
-    DrawAxes();
-    switch (function) {
-
-    case 1: {
-      DrawText("Draw sin(x) ", 15, 15, 25, WHITE);
-      Draw_Sin();
-      break;
-    }
-
-    case 2: {
-      DrawText("Draw cos(x) ", 15, 15, 25, WHITE);
-      Draw_Cos();
-      break;
-    }
-    case 3: {
-      DrawText("Draw tan(x) ", 15, 15, 25, WHITE);
-      Draw_Tan();
-      break;
-    }
-
-    case 4: {
-      DrawText("Draw e^x ", 15, 15, 25, WHITE);
-      Draw_Exp();
-      break;
-    }
-
-    case 5: {
-      DrawText("Draw Ln ", 15, 15, 25, WHITE);
-      Draw_Ln();
-      break;
-    }
-
-    case 6: {
-      DrawText("Draw x ", 15, 15, 25, WHITE);
-      Draw_X();
-      break;
-    }
-    case 7: {
-      DrawText("Draw x^2 ", 15, 15, 25, WHITE);
-      Draw_Square();
-      break;
-    }
-    case 8: {
-      DrawText("Draw | x | ", 15, GetScreenWidth() / 2 + 150, 25, WHITE);
-      Draw_Abs();
-      break;
-    }
-    default:
-      continue;
-    }
-
-    EndDrawing();
-  }
-  CloseWindow();
-  return 0;
 }
 
-void DrawAxes(void) {
-  DrawLine(WIDTH / 2, 0, WIDTH / 2, HEIGHT, WHITE);
-  DrawLine(0, HEIGHT / 2, WIDTH, HEIGHT / 2, WHITE);
-
-  for (int i = -WIDTH / 2; i <= WIDTH / 2; i += 50) {
-    DrawLine(WIDTH / 2 + i, HEIGHT / 2 - 5, WIDTH / 2 + i, HEIGHT / 2 + 5,
-             WHITE);
-  }
-
-  for (int i = -HEIGHT / 2; i <= HEIGHT / 2; i += 50) {
-    DrawLine(WIDTH / 2 - 5, HEIGHT / 2 + i, WIDTH / 2 + 5, HEIGHT / 2 + i,
-             WHITE);
-  }
+FunctionType get_function_choice(void) {
+    int choice;
+    do {
+        choice = get_int("Enter your choice (1-8): ");
+        if (choice < 1 || choice > 8) {
+            printf("Invalid choice. Please enter a number between 1 and 8.\n");
+        }
+    } while (choice < 1 || choice > 8);
+    
+    return (FunctionType)choice;
 }
 
-void Draw_Square() {
-  for (int x = -HEIGHT / 2; x < HEIGHT / 2; x++) {
-    int y = x * x / 100;
-    DrawPixel(x + WIDTH / 2, HEIGHT / 2 - y, RED);
-  }
-}
-
-void Draw_Sin() {
-  for (int px = 0; px < WIDTH; px++) {
-    float x = (px - (float)WIDTH / 2) / 50.0f;
-    float y = sinf(x);
-    int py = HEIGHT / 2 - (int)(y * 100);
-    DrawPixel(px, py, RED);
-  }
-}
-
-void Draw_Cos() {
-  for (int px = 0; px < WIDTH; px++) {
-    float x = (px - (float)WIDTH / 2) / 50.0f;
-    float y = cosf(x);
-    int py = HEIGHT / 2 - (int)(y * 100);
-    DrawPixel(px, py, RED);
-  }
-}
-
-void Draw_Exp() {
-  const float scaleX = 10.0f;
-  const float scaleY = 20.0f;
-  const int originX = WIDTH / 2;
-  const int originY = HEIGHT / 2;
-
-  for (int px = 0; px < WIDTH; px++) {
-    float x = (px - originX) / scaleX;
-    float y = expf(x);
-    float py = originY - y * scaleY;
-
-    if (py >= 0 && py < HEIGHT) {
-      DrawPixel(px, (int)py, RED);
+void draw_function(FunctionType func) {
+    switch (func) {
+        case FUNCTION_SIN:
+            DrawText("sin(x)", 15, 15, 25, WHITE);
+            draw_sin();
+            break;
+        case FUNCTION_COS:
+            DrawText("cos(x)", 15, 15, 25, WHITE);
+            draw_cos();
+            break;
+        case FUNCTION_TAN:
+            DrawText("tan(x)", 15, 15, 25, WHITE);
+            draw_tan();
+            break;
+        case FUNCTION_EXP:
+            DrawText("e^x", 15, 15, 25, WHITE);
+            draw_exp();
+            break;
+        case FUNCTION_LN:
+            DrawText("ln(x)", 15, 15, 25, WHITE);
+            draw_ln();
+            break;
+        case FUNCTION_X:
+            DrawText("x", 15, 15, 25, WHITE);
+            draw_x();
+            break;
+        case FUNCTION_SQUARE:
+            DrawText("x^2", 15, 15, 25, WHITE);
+            draw_square();
+            break;
+        case FUNCTION_ABS:
+            DrawText("|x|", 15, 15, 25, WHITE);
+            draw_abs();
+            break;
     }
-  }
 }
 
-void Draw_Ln() {
-  const float scaleX = 40.0f;
-  const float scaleY = 20.0f;
-  const int originX = WIDTH / 2;
-  const int originY = HEIGHT / 2;
-
-  float prevX = originX + 0.01f * scaleX;
-  float prevY = originY - logf(0.01f) * scaleY;
-
-  for (float x = 0.02f; x <= 10; x += 0.01f) {
-    float y = logf(x);
-
-    float sx = originX + x * scaleX;
-    float sy = originY - y * scaleY;
-
-    DrawLine((int)prevX, (int)prevY, (int)sx, (int)sy, RED);
-
-    prevX = sx;
-    prevY = sy;
-  }
+void draw_axes(void) {
+    DrawLine(WIDTH / 2, 0, WIDTH / 2, HEIGHT, WHITE);
+    DrawLine(0, HEIGHT / 2, WIDTH, HEIGHT / 2, WHITE);
+    
+    for (int i = -WIDTH / 2; i <= WIDTH / 2; i += 50) {
+        DrawLine(WIDTH / 2 + i, HEIGHT / 2 - TICK_SIZE, 
+                WIDTH / 2 + i, HEIGHT / 2 + TICK_SIZE, WHITE);
+    }
+    
+    for (int i = -HEIGHT / 2; i <= HEIGHT / 2; i += 50) {
+        DrawLine(WIDTH / 2 - TICK_SIZE, HEIGHT / 2 + i, 
+                WIDTH / 2 + TICK_SIZE, HEIGHT / 2 + i, WHITE);
+    }
 }
 
-void Draw_Abs() {
-
-  for (int x = -WIDTH / 2; x < WIDTH / 2; x++) {
-    int y = abs(x);
-    DrawPixel(x + WIDTH / 2, -y + HEIGHT / 2, RED);
-  }
+void draw_sin(void) {
+    for (int px = 0; px < WIDTH; px++) {
+        float x = (px - (float)WIDTH / 2) / SCALE_FACTOR;
+        float y = sinf(x);
+        int py = HEIGHT / 2 - (int)(y * PLOT_SCALE);
+        
+        if (py >= 0 && py < HEIGHT) {
+            DrawPixel(px, py, RED);
+        }
+    }
 }
 
-void Draw_Tan() {
-  for (int px = 0; px < WIDTH; px++) {
-    float x = (px - (float)WIDTH / 2) / 50.0f;
-    float y = tanf(x);
-    int py = HEIGHT / 2 - (int)(y * 100);
-    DrawPixel(px, py, RED);
-  }
+void draw_cos(void) {
+    for (int px = 0; px < WIDTH; px++) {
+        float x = (px - (float)WIDTH / 2) / SCALE_FACTOR;
+        float y = cosf(x);
+        int py = HEIGHT / 2 - (int)(y * PLOT_SCALE);
+        
+        if (py >= 0 && py < HEIGHT) {
+            DrawPixel(px, py, RED);
+        }
+    }
 }
 
-void Draw_X() {
-  for (int x = -WIDTH / 2; x < WIDTH / 2; x++) {
-    int startX = WIDTH / 2 + x;
-    int startY = HEIGHT / 2 - x;
+void draw_tan(void) {
+    for (int px = 0; px < WIDTH; px++) {
+        float x = (px - (float)WIDTH / 2) / SCALE_FACTOR;
+        float y = tanf(x);
+        
+        if (y > 10.0f) y = 10.0f;
+        if (y < -10.0f) y = -10.0f;
+        
+        int py = HEIGHT / 2 - (int)(y * PLOT_SCALE);
+        
+        if (py >= 0 && py < HEIGHT) {
+            DrawPixel(px, py, RED);
+        }
+    }
+}
 
-    int endX = WIDTH / 2 + x + 1;
-    int endY = HEIGHT / 2 - (x + 1);
+void draw_exp(void) {
+    const float scale_x = 10.0f;
+    const float scale_y = 20.0f;
+    const int origin_x = WIDTH / 2;
+    const int origin_y = HEIGHT / 2;
+    
+    for (int px = 0; px < WIDTH; px++) {
+        float x = (px - origin_x) / scale_x;
+        float y = expf(x);
+        float py = origin_y - y * scale_y;
+        
+        if (py >= 0 && py < HEIGHT) {
+            DrawPixel(px, (int)py, RED);
+        }
+    }
+}
 
-    DrawLine(startX, startY, endX, endY, RED);
-  }
+void draw_ln(void) {
+    const float scale_x = 40.0f;
+    const float scale_y = 20.0f;
+    const int origin_x = WIDTH / 2;
+    const int origin_y = HEIGHT / 2;
+    
+    float prev_x = origin_x + 0.01f * scale_x;
+    float prev_y = origin_y - logf(0.01f) * scale_y;
+    
+    for (float x = 0.02f; x <= 10; x += 0.01f) {
+        float y = logf(x);
+        float sx = origin_x + x * scale_x;
+        float sy = origin_y - y * scale_y;
+        
+        DrawLine((int)prev_x, (int)prev_y, (int)sx, (int)sy, RED);
+        
+        prev_x = sx;
+        prev_y = sy;
+    }
+}
+
+void draw_x(void) {
+    for (int x = -WIDTH / 2; x < WIDTH / 2; x++) {
+        int start_x = WIDTH / 2 + x;
+        int start_y = HEIGHT / 2 - x;
+        int end_x = WIDTH / 2 + x + 1;
+        int end_y = HEIGHT / 2 - (x + 1);
+        
+        DrawLine(start_x, start_y, end_x, end_y, RED);
+    }
+}
+
+void draw_square(void) {
+    for (int x = -HEIGHT / 2; x < HEIGHT / 2; x++) {
+        int y = x * x / 100;
+        int screen_x = x + WIDTH / 2;
+        int screen_y = HEIGHT / 2 - y;
+        
+        if (screen_x >= 0 && screen_x < WIDTH && screen_y >= 0 && screen_y < HEIGHT) {
+            DrawPixel(screen_x, screen_y, RED);
+        }
+    }
+}
+
+void draw_abs(void) {
+    for (int x = -WIDTH / 2; x < WIDTH / 2; x++) {
+        int y = abs(x);
+        int screen_x = x + WIDTH / 2;
+        int screen_y = -y + HEIGHT / 2;
+        
+        if (screen_x >= 0 && screen_x < WIDTH && screen_y >= 0 && screen_y < HEIGHT) {
+            DrawPixel(screen_x, screen_y, RED);
+        }
+    }
 }
