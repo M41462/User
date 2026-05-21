@@ -1,25 +1,46 @@
 #include "../include/Ghost.hpp"
-#include <string>
+#include <SFML/Graphics/CircleShape.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/System/Vector2.hpp>
 
 namespace pacman {
 
-// TODO: implement ghost AI, movement patterns, and rendering
-Ghost::Ghost() : ghostsSprite(ghostsTexture[0]) {
-    ghostsPosition = {0,0}; 
+// Initializes ghost visual appearance and positions
+Ghost::Ghost() {
+  const sf::Vector2f size(23.f, 23.f); // Ghost size
+  for (int i = 0; i < MAX_GHOSTS; i++) {
+    ghostsShape[i].setSize(size);
+    ghostsShape[i].setFillColor(ghostsColor[i]); // Set individual colors
+    ghostsShape[i].setPosition(ghostsPosition[i]);
+  }
 }
 
 Ghost::~Ghost() {}
 
+// Renders all ghosts on the given window
+void Ghost::drawGhosts(sf::RenderWindow &window) {
+  for (int i = 0; i < MAX_GHOSTS; i++) {
+    ghostsShape[i].setPosition(ghostsPosition[i]);
+    window.draw(ghostsShape[i]);
+  }
+}
 
-bool Ghost::initGhostsTexture(){
-    std::string path = ghostsTexturePath; 
-    for(int i = 0 ; i < MAX_GHOSTS ; i++){
-        path += std::to_string(i); 
-        if (!ghostsTexture->loadFromFile(path)){
-            return false;
-        }
+// Checks for collision between any ghost and Pacman
+bool Ghost::ghostsPacmanCollision(sf::CircleShape &pacmanShape) {
+  for (int i = 0; i < MAX_GHOSTS; i++) {
+    if (pacmanShape.getGlobalBounds().findIntersection(
+            ghostsShape[i].getGlobalBounds())) {
+      return true; // Collision detected
     }
-    return true; 
+  }
+  return false; // No collision
+}
+
+// Updates ghost positions based on Pacman's position (AI movement)
+// Currently a stub - no actual movement logic implemented
+void Ghost::movement(sf::Vector2f pacmanPosition, float deltaTimer,
+                     const int FPS) {
+  // TODO: Implement ghost AI and movement patterns
 }
 
 } // namespace pacman

@@ -7,31 +7,54 @@
 #include <SFML/System/Vector2.hpp>
 #include <string>
 #include <vector>
+
 namespace pacman {
 
-// Tile-based game map (28x31 grid, 32px cells). Renders walls, pellets,
-// power pellets. Tile chars: #=wall .=pellet O=power pellet P=spawn G=ghost.
+// Tile-based game map (28x31 grid, 32px cells).
+// Renders walls, pellets, and power pellets.
+// Tile characters:
+//   # = wall
+//   . = pellet
+//   O = power pellet
+//   P = Pacman spawn point
+//   G = ghost spawn point
 class Map {
 public:
   Map();
   ~Map();
+
+  // Render the entire map
   void drawMap(sf::RenderWindow &window);
-  const sf::Vector2f getSpawnPosition();
+
+  // Spawn position getters
+  const sf::Vector2f getPacmanSpawnPosition();
+  std::vector<sf::Vector2f> getGhostsSpawnPositions();
+
+  // Collision detection
   bool isWallCollision(sf::CircleShape &pacmanShape);
-  int checkPelletCollision(sf::CircleShape &pacmanShape);
+  int checkPelletCollision(
+      sf::CircleShape &pacmanShape); // Returns 1 for pellet, 2 for power pellet
+
+  // Game state checks
   bool areAllPelletsEaten() const;
 
 private:
+  // Map dimensions and cell size
   static constexpr unsigned int MAP_WIDTH = 28;
   static constexpr unsigned int MAP_HEIGHT = 31;
   static constexpr unsigned int CELL_SIZE = 32;
 
-  sf::RectangleShape wall;
-  sf::CircleShape pellet;
-  sf::CircleShape powerPellet;
+  // Visual elements
+  sf::RectangleShape wall;     // Wall tile
+  sf::CircleShape pellet;      // Regular pellet
+  sf::CircleShape powerPellet; // Power pellet
 
+  // Visual offsets for centering pellets in cells
   const int pelletOffset = 15;
   const int powerPelletOffset = 10;
+
+  // Map layout - 28x31 grid of tiles
+  // clang-format off
   std::vector<std::string> map = {
     "############################",
     "#............##............#",
@@ -65,6 +88,7 @@ private:
     "#..........................#",
     "############################"
   };
+  // clang-format on
 };
 
 } // namespace pacman

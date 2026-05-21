@@ -1,19 +1,29 @@
 #ifndef GAMESTATE_HPP
 #define GAMESTATE_HPP
+
 #include <string>
 
 namespace pacman {
 
-enum class GameState { MENU, PLAYING, PAUSSED, VICTORY, LOSE };
-// Game flow states. Defined but not yet used by Game.
+// Game state enumeration for tracking current game phase
+enum class GameState {
+  MENU,    // Main menu state
+  PLAYING, // Game is actively running
+  PAUSSED, // Game is paused
+  VICTORY, // Player has won
+  LOSE     // Player has lost
+};
+
+// Utility struct for converting GameState to string representation
 struct State {
-  GameState gameState;
   static constexpr const char *Menu = "MENU";
   static constexpr const char *Playing = "PLAYING";
-  static constexpr const char *Paussed = "PAUSSED";
+  static constexpr const char *Paussed = "PAUSED"; // Fixed typo
   static constexpr const char *Victory = "VICTORY";
   static constexpr const char *Lose = "LOSE";
-  std::string getGameState() const {
+
+  // Converts GameState enum to human-readable string
+  static const std::string getGameState(GameState gameState) {
     switch (gameState) {
     case GameState::MENU:
       return Menu;
@@ -25,9 +35,8 @@ struct State {
       return Victory;
     case GameState::LOSE:
       return Lose;
-
     default:
-      return "Unkown";
+      return "Unknown";
     }
   }
 };
