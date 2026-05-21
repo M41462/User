@@ -19,6 +19,8 @@ public:
 
   // Handle keyboard input and update position
   void movement(float deltaTimer, const int FPS);
+  const unsigned int getPacmanLives() { return this->lives; }
+  void setLives() { this->lives--; }
 
   // Getters and setters
   sf::CircleShape &getPacmanShape() { return pacmanShape; }
@@ -30,6 +32,7 @@ public:
 private:
   sf::CircleShape pacmanShape; // Visual representation of Pacman
   sf::Vector2f pacmanPosition; // Current position in world coordinates
+  static inline unsigned int lives = 3;
 };
 
 } // namespace pacman

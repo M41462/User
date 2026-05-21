@@ -1,12 +1,14 @@
 #ifndef ENTITY_HPP
 #define ENTITY_HPP
 
+#include "GameState.hpp"
 #include <SFML/Audio.hpp>
 #include <SFML/Audio/Music.hpp>
 #include <SFML/Audio/Sound.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/Text.hpp>
 
 namespace pacman {
 
@@ -29,6 +31,10 @@ public:
   void playFoodSound();      // Play regular pellet sound
   bool loadPowerFoodSound(); // Load power pellet sound
   void playPowerFoodSound(); // Play power pellet sound
+  bool loadPacmanDeathSound();
+  void playPacmanDeathSound();
+  bool initGameFont();
+  void drawGameFont(sf::RenderWindow &window, GameState &gameState);
 
 private:
   sf::Image icon;                 // Window icon
@@ -37,12 +43,20 @@ private:
   sf::Sound foodSound;            // Sound for pellet collection
   sf::SoundBuffer powerEatBuffer; // Buffer for power pellet sound
   sf::Sound powerFoodSound;       // Sound for power pellet collection
+  sf::SoundBuffer deathBuffer;
+  sf::Sound deathSound; // Sound for pacman death;
+  sf::Font gameFont;
+  sf::Text title;
+  sf::Text play;
+  sf::Text exit;
 
   // File paths for audio assets
   // Audio asset file paths
   const std::string menuMusicPath = "assets/sounds/start_music.wav";
   const std::string eatPelletPath = "assets/sounds/pacman_chomp.wav";
   const std::string eatPowerPelletPath = "assets/sounds/pacman_eatfruit.wav";
+  const std::string deathSoundPath = "assets/sounds/pacman_death.wav";
+  const std::string gameFontPath = "assets/fonts/pac-font.ttf";
 };
 
 } // namespace pacman

@@ -1,1 +1,1 @@
-player Score : 0
+player Score : 26
