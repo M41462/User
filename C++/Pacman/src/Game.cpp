@@ -1,6 +1,4 @@
 #include "../include/Game.hpp"
-#include "Ghost.hpp"
-#include "Pacman.hpp"
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/System/Sleep.hpp>

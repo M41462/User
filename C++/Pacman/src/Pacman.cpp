@@ -1,5 +1,4 @@
 #include "../include/Pacman.hpp"
-#include "Entity.hpp"
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -66,6 +65,10 @@ bool Pacman::loadPacmanTextures() {
     if (!pacmanTexture[i].loadFromFile(pacmanTexturePath[i]))
       throw std::runtime_error("Failed to load " + pacmanTexturePath[i]);
   }
+
+  pacmanShape.setScale(sf::Vector2f(0.90f, 0.90f));
+  pacmanShape.setTextureRect(
+      sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(26, 26)));
   pacmanShape.setTexture(pacmanTexture[2]);
   return true;
 }

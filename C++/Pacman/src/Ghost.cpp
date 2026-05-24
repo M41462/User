@@ -1,5 +1,4 @@
 #include "../include/Ghost.hpp"
-#include "Entity.hpp"
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Sprite.hpp>

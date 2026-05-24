@@ -1,2 +1,2 @@
-player Score : 0
-Game Status : MENU
+player Score : 41
+Game Status : PLAYING
