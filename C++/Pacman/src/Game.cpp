@@ -1,4 +1,6 @@
 #include "../include/Game.hpp"
+#include "Ghost.hpp"
+#include "Pacman.hpp"
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/System/Sleep.hpp>
@@ -8,6 +10,7 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Window.hpp>
 #include <SFML/Window/WindowEnums.hpp>
+#include <exception>
 #include <iostream>
 #include <optional>
 #include <stdexcept>
@@ -45,11 +48,22 @@ Game::Game() {
   gameState = GameState::MENU;
 }
 
-inline void checkResources(sf::RenderWindow &window, Entity &entity) {
+inline void checkResources(sf::RenderWindow &window, Entity &entity,
+                           Pacman &pacman, Ghost &ghosts) {
   try {
     entity.setIconWindow(window);
   } catch (const std::exception &e) {
     std::cerr << "Warning: " << e.what() << " (no icon)" << std::endl;
+  }
+  try {
+    pacman.loadPacmanTextures();
+  } catch (const std::exception &e) {
+    std::cerr << "Error loading pacman texture" << std::endl;
+  }
+  try {
+    ghosts.initGhosts();
+  } catch (const std::exception &e) {
+    std::cerr << "Error loading ghosts texture" << std::endl;
   }
 
   try {
@@ -92,7 +106,7 @@ void Game::run() {
   bool running = true;
   sf::Clock deltaClock;
 
-  checkResources(window, entity);
+  checkResources(window, entity, pacman, ghosts);
   // Game loop
   while (window.isOpen() && running) {
     // Process events
@@ -205,6 +219,9 @@ void Game::render(bool &running) {
   pacman.drawPacman(window);
   ghosts.drawGhosts(window);
   entity.drawGameFont(window, gameState, utils, running);
+
+  sf::RectangleShape debugRect = pacman.getDebugRectangle();
+  window.draw(debugRect);
   window.display();
 }
 

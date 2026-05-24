@@ -2,21 +2,34 @@
 #include "Entity.hpp"
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/Sprite.hpp>
 #include <SFML/System/Vector2.hpp>
+#include <stdexcept>
 
 namespace pacman {
 
 // Initializes ghost visual appearance and positions
-Ghost::Ghost() {
+Ghost::Ghost()
+    : ghostsShape{sf::Sprite(ghostsTexture[0]), sf::Sprite(ghostsTexture[1]),
+                  sf::Sprite(ghostsTexture[2]), sf::Sprite(ghostsTexture[3])} {
   const sf::Vector2f size(23.f, 23.f); // Ghost size
+}
+Ghost::~Ghost() {}
+
+void Ghost::initGhosts() {
+  Direction displayDirs[MAX_GHOSTS] = {
+      Direction::DOWN, Direction::LEFT, Direction::RIGHT, Direction::UP};
   for (int i = 0; i < MAX_GHOSTS; i++) {
-    ghostsShape[i].setSize(size);
-    ghostsShape[i].setFillColor(ghostsColor[i]); // Set individual colors
+    if (!ghostsTexture[i].loadFromFile(ghostsTexturePath[i])) {
+      throw std::runtime_error("Error Init ghosts texture");
+    }
+    ghostsShape[i].setTexture(ghostsTexture[i]);
+    ghostsShape[i].setTextureRect(
+        sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(24, 24)));
     ghostsShape[i].setPosition(ghostsPosition[i]);
+    ghostsDirection[i] = Direction::NONE;
   }
 }
-
-Ghost::~Ghost() {}
 
 // Renders all ghosts on the given window
 void Ghost::drawGhosts(sf::RenderWindow &window) {
@@ -27,7 +40,7 @@ void Ghost::drawGhosts(sf::RenderWindow &window) {
 }
 
 // Checks for collision between any ghost and Pacman
-bool Ghost::ghostsPacmanCollision(sf::CircleShape &pacmanShape) {
+bool Ghost::ghostsPacmanCollision(sf::Sprite &pacmanShape) {
   for (int i = 0; i < MAX_GHOSTS; i++) {
     if (pacmanShape.getGlobalBounds().findIntersection(
             ghostsShape[i].getGlobalBounds())) {
@@ -47,20 +60,18 @@ void Ghost::movement(sf::Vector2f pacmanPosition, float deltaTimer,
     case Direction::UP:
       ghostsPosition[i].y -= GHOST_SPEED * FPS * deltaTimer;
       break;
-    case Direction::DOWN:
 
+    case Direction::DOWN:
       ghostsPosition[i].y += GHOST_SPEED * FPS * deltaTimer;
       break;
 
     case Direction::LEFT:
-
       ghostsPosition[i].x -= GHOST_SPEED * FPS * deltaTimer;
       break;
 
     case Direction::RIGHT:
       ghostsPosition[i].x += GHOST_SPEED * FPS * deltaTimer;
       break;
-    case Direction::NONE:
     default:
       break;
     }

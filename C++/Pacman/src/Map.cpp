@@ -1,6 +1,7 @@
 #include "../include/Map.hpp"
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/Rect.hpp>
+#include <SFML/Graphics/Sprite.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <vector>
 
@@ -57,7 +58,7 @@ void Map::drawMap(sf::RenderWindow &window) {
 
 // Finds and returns Pacman's spawn position on the map
 const sf::Vector2f Map::getPacmanSpawnPosition() {
-  sf::Vector2f pacmanOffset(5.f, 5.f); // Offset to center Pacman in cell
+  sf::Vector2f pacmanOffset(5.f, 0.f); // Offset to center Pacman in cell
 
   for (int i = 0; i < MAP_HEIGHT; i++) {
     for (int j = 0; j < MAP_WIDTH; j++) {
@@ -87,45 +88,25 @@ std::vector<sf::Vector2f> Map::getGhostsSpawnPositions() {
 }
 
 // Checks if Pacman is colliding with any wall
-bool Map::isWallCollision(sf::CircleShape &pacmanShape) {
-  sf::FloatRect circleBounds = pacmanShape.getGlobalBounds();
-
+bool Map::isWallCollision(sf::Sprite &shape) {
   for (int i = 0; i < MAP_HEIGHT; i++) {
     for (int j = 0; j < MAP_WIDTH; j++) {
       if (map[i][j] == '#') { // Wall tile
         sf::Vector2f pos(j * CELL_SIZE, i * CELL_SIZE);
         sf::Vector2f size(CELL_SIZE, CELL_SIZE);
         sf::FloatRect wallBounds(pos, size);
-        if (circleBounds.findIntersection(wallBounds)) {
+        if (shape.getGlobalBounds().findIntersection(wallBounds)) {
           return true;
         }
       }
     }
   }
-  return false;
-}
-
-bool Map::isWallCollision(sf::RectangleShape &ghostsShape) {
-
-  for (int i = 0; i < MAP_HEIGHT; i++) {
-    for (int j = 0; j < MAP_WIDTH; j++) {
-      if (map[i][j] == '#') { // Wall tile
-        sf::Vector2f pos(j * CELL_SIZE, i * CELL_SIZE);
-        sf::Vector2f size(CELL_SIZE, CELL_SIZE);
-        sf::FloatRect wallBounds(pos, size);
-        if (ghostsShape.getGlobalBounds().findIntersection(wallBounds)) {
-          return true;
-        }
-      }
-    }
-  }
-
   return false;
 }
 
 // Checks if Pacman is colliding with any pellet or power pellet
 // Returns 1 for regular pellet, 2 for power pellet, 0 for no collision
-int Map::checkPelletCollision(sf::CircleShape &pacmanShape) {
+int Map::checkPelletCollision(sf::Sprite &pacmanShape) {
   sf::FloatRect bounds = pacmanShape.getGlobalBounds();
   sf::Vector2f center(bounds.position.x + bounds.size.x / 2.f,
                       bounds.position.y + bounds.size.y / 2.f);

@@ -11,7 +11,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Text.hpp>
 
-enum class Direction{NONE=0 , UP , DOWN , LEFT , RIGHT}; 
+enum class Direction {DOWN = 0 , LEFT, RIGHT, UP , NONE };
 
 namespace pacman {
 

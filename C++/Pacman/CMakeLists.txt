@@ -20,4 +20,4 @@ add_executable(Pacman ${SOURCES})
 
 target_include_directories(Pacman PRIVATE "${CMAKE_SOURCE_DIR}/include")
 
-target_link_libraries(Pacman PRIVATE sfml-graphics sfml-window sfml-system sfml-audio sfml-network)
+target_link_libraries(Pacman PRIVATE sfml-graphics sfml-window sfml-system sfml-audio sfml-network -lm)

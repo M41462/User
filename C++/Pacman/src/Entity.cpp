@@ -39,7 +39,7 @@ Entity::~Entity() {}
 
 // Load and set the window icon from assets/game.png (error logged if missing).
 void Entity::setIconWindow(sf::RenderWindow &window) {
-  if (!icon.loadFromFile("assets/game.png"))
+  if (!icon.loadFromFile("assets/logo/game.png"))
     throw std::runtime_error("Failed to load window icon: assets/game.png");
   window.setIcon(icon.getSize(), icon.getPixelsPtr());
 }

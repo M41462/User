@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/Sprite.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <string>
 #include <vector>
@@ -31,10 +32,9 @@ public:
   std::vector<sf::Vector2f> getGhostsSpawnPositions();
 
   // Collision detection
-  bool isWallCollision(sf::CircleShape &pacmanShape);
-  bool isWallCollision(sf::RectangleShape &ghostsShape);
+  bool isWallCollision(sf::Sprite &shape);
   int checkPelletCollision(
-      sf::CircleShape &pacmanShape); // Returns 1 for pellet, 2 for power pellet
+      sf::Sprite &pacmanShape); // Returns 1 for pellet, 2 for power pellet
 
   // Game state checks
   bool areAllPelletsEaten() const;

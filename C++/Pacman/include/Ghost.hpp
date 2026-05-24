@@ -21,6 +21,7 @@ public:
 
   // Render all ghosts on the given window
   void drawGhosts(sf::RenderWindow &window);
+  void initGhosts();
 
   // Update ghost positions based on Pacman's position (AI movement)
   void movement(sf::Vector2f pacmanPosition, float deltaTimer, const int FPS);
@@ -29,40 +30,30 @@ public:
   sf::Vector2f getGhostsPositions(unsigned int index) const {
     return ghostsPosition[index];
   }
-  sf::RectangleShape &getGhostShape(int index) { return ghostsShape[index]; }
+  sf::Sprite &getGhostShape(int index) { return ghostsShape[index]; }
   void setGhostsPositions(unsigned int index, sf::Vector2f newPosition) {
     ghostsPosition[index] = newPosition;
   }
 
   // Check for collision between any ghost and Pacman
-  bool ghostsPacmanCollision(sf::CircleShape &pacmanShape);
+  bool ghostsPacmanCollision(sf::Sprite &pacmanShape);
   bool isValidDirection(int index, Direction dir) const;
 
   void updateDirection(int index, sf::Vector2f pacmanPos,
                        sf::Vector2f blinkyPos);
 
 private:
-  sf::RectangleShape ghostsShape[MAX_GHOSTS]; // Visual representation of ghosts
-  Direction ghostsDirection[MAX_GHOSTS];
-  static constexpr float GHOST_SPEED = 2.5f;
-  const sf::Color ghostsColor[MAX_GHOSTS] = {
-      // Colors for each ghost
-      sf::Color::Red,           // Ghost 1
-      sf::Color(255, 192, 203), // Ghost 2
-      sf::Color::Green,         // Ghost 3
-      sf::Color(255, 165, 0)    // Ghost 4
-  };
-
-
-  /*
-  // Texture-based rendering (currently unused)
   sf::Texture ghostsTexture[MAX_GHOSTS];
-  sf::Sprite ghostsSprite;
-  */
-
-  std::string ghostsTexturePath; // Path to ghost textures (unused)
+  sf::Sprite ghostsShape[MAX_GHOSTS]; // Visual representation of ghosts
+  Direction ghostsDirection[MAX_GHOSTS];
+  std::string ghostsTexturePath[MAX_GHOSTS] = {
+      "assets/textures/ghost_blue_ss.png",
+      "assets/textures/ghost_orange_ss.png",
+      "assets/textures/ghost_pink_ss.png",
+      "assets/textures/ghost_red_ss.png"}; // Path to ghost textures (unused)
   sf::Vector2f ghostsPosition[MAX_GHOSTS] =
       {}; // Current positions of all ghosts
+  static constexpr float GHOST_SPEED = 2.5f;
 };
 
 } // namespace pacman

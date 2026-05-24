@@ -3,8 +3,8 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Window/Keyboard.hpp>
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <ostream>
 
 namespace pacman {
@@ -24,8 +24,7 @@ void Utils::writeScore(GameState &gameState) {
   std::ofstream dataFile(dataFilePath);
   if (dataFile.is_open()) {
     dataFile << "player Score : " << score << std::endl;
-    dataFile << "Game Status : " << State::getGameState(gameState)
-             << std::endl;
+    dataFile << "Game Status : " << State::getGameState(gameState) << std::endl;
   }
 }
 
