@@ -1,6 +1,8 @@
 #ifndef PACMAN_HPP
 #define PACMAN_HPP
 
+#include "GameState.hpp"
+#include "Entity.hpp"
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Vector2.hpp>
@@ -18,7 +20,7 @@ public:
   void drawPacman(sf::RenderWindow &window);
 
   // Handle keyboard input and update position
-  void movement(float deltaTimer, const int FPS);
+  void movement(float deltaTimer, const int FPS, GameState &gamestate);
   const unsigned int getPacmanLives() { return this->lives; }
   void setLives() { this->lives--; }
 
@@ -30,6 +32,8 @@ public:
   }
 
 private:
+  static constexpr float PACMAN_SPEED = 3.0f;
+  Direction pacmanDirection; 
   sf::CircleShape pacmanShape; // Visual representation of Pacman
   sf::Vector2f pacmanPosition; // Current position in world coordinates
   static inline unsigned int lives = 3;

@@ -48,8 +48,8 @@ private:
 
   // Core game loop functions
   void processEvents(const std::optional<sf::Event> event, bool &running);
-  void update(float dt); // Updates game state
-  void render();         // Renders current frame
+  void update(float dt);      // Updates game state
+  void render(bool &running); // Renders current frame
 };
 
 } // namespace pacman

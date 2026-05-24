@@ -2,6 +2,7 @@
 #define ENTITY_HPP
 
 #include "GameState.hpp"
+#include "Utils.hpp"
 #include <SFML/Audio.hpp>
 #include <SFML/Audio/Music.hpp>
 #include <SFML/Audio/Sound.hpp>
@@ -9,6 +10,8 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Text.hpp>
+
+enum class Direction{NONE=0 , UP , DOWN , LEFT , RIGHT}; 
 
 namespace pacman {
 
@@ -34,7 +37,8 @@ public:
   bool loadPacmanDeathSound();
   void playPacmanDeathSound();
   bool initGameFont();
-  void drawGameFont(sf::RenderWindow &window, GameState &gameState);
+  void drawGameFont(sf::RenderWindow &window, GameState &gameState,
+                    Utils &utils, bool &running);
 
 private:
   sf::Image icon;                 // Window icon
@@ -49,6 +53,7 @@ private:
   sf::Text title;
   sf::Text play;
   sf::Text exit;
+  sf::Text texts[MAX_TEXT] = {title, play, exit};
 
   // File paths for audio assets
   // Audio asset file paths

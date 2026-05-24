@@ -1,4 +1,5 @@
 #include "../include/Ghost.hpp"
+#include "Entity.hpp"
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Vector2.hpp>
@@ -41,6 +42,32 @@ bool Ghost::ghostsPacmanCollision(sf::CircleShape &pacmanShape) {
 void Ghost::movement(sf::Vector2f pacmanPosition, float deltaTimer,
                      const int FPS) {
   // TODO: Implement ghost AI and movement patterns
+  for (int i = 0; i < MAX_GHOSTS; i++) {
+    switch (ghostsDirection[i]) {
+    case Direction::UP:
+      ghostsPosition[i].y -= GHOST_SPEED * FPS * deltaTimer;
+      break;
+    case Direction::DOWN:
+
+      ghostsPosition[i].y += GHOST_SPEED * FPS * deltaTimer;
+      break;
+
+    case Direction::LEFT:
+
+      ghostsPosition[i].x -= GHOST_SPEED * FPS * deltaTimer;
+      break;
+
+    case Direction::RIGHT:
+      ghostsPosition[i].x += GHOST_SPEED * FPS * deltaTimer;
+      break;
+    case Direction::NONE:
+    default:
+      break;
+    }
+  }
 }
+
+void Ghost::updateDirection(int index, sf::Vector2f pacmanPos,
+                            sf::Vector2f blinkyPos) {}
 
 } // namespace pacman

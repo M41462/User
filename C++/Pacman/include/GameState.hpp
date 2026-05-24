@@ -9,7 +9,6 @@ namespace pacman {
 enum class GameState {
   MENU,    // Main menu state
   PLAYING, // Game is actively running
-  PAUSED,  // Game is paused
   VICTORY, // Player has won
   LOSE,    // Player has lost
   RESET
@@ -19,7 +18,6 @@ enum class GameState {
 struct State {
   static constexpr const char *Menu = "MENU";
   static constexpr const char *Playing = "PLAYING";
-  static constexpr const char *Paussed = "PAUSED";
   static constexpr const char *Victory = "VICTORY";
   static constexpr const char *Lose = "LOSE";
   static constexpr const char *Reset = "RESET";
@@ -31,8 +29,6 @@ struct State {
       return Menu;
     case GameState::PLAYING:
       return Playing;
-    case GameState::PAUSED:
-      return Paussed;
     case GameState::VICTORY:
       return Victory;
     case GameState::LOSE:

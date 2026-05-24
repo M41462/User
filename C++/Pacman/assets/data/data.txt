@@ -1,1 +1,2 @@
-player Score : 26
+player Score : 0
+Game Status : MENU

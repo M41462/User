@@ -105,6 +105,24 @@ bool Map::isWallCollision(sf::CircleShape &pacmanShape) {
   return false;
 }
 
+bool Map::isWallCollision(sf::RectangleShape &ghostsShape) {
+
+  for (int i = 0; i < MAP_HEIGHT; i++) {
+    for (int j = 0; j < MAP_WIDTH; j++) {
+      if (map[i][j] == '#') { // Wall tile
+        sf::Vector2f pos(j * CELL_SIZE, i * CELL_SIZE);
+        sf::Vector2f size(CELL_SIZE, CELL_SIZE);
+        sf::FloatRect wallBounds(pos, size);
+        if (ghostsShape.getGlobalBounds().findIntersection(wallBounds)) {
+          return true;
+        }
+      }
+    }
+  }
+
+  return false;
+}
+
 // Checks if Pacman is colliding with any pellet or power pellet
 // Returns 1 for regular pellet, 2 for power pellet, 0 for no collision
 int Map::checkPelletCollision(sf::CircleShape &pacmanShape) {

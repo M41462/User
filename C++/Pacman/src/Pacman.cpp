@@ -1,4 +1,5 @@
 #include "../include/Pacman.hpp"
+#include "Entity.hpp"
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -12,6 +13,7 @@ Pacman::Pacman() {
   pacmanShape.setRadius(10.f);              // Pacman size
   pacmanShape.setOutlineThickness(2.f);     // Outline thickness
   pacmanShape.setFillColor(sf::Color::Red); // Pacman color
+  pacmanDirection = Direction::NONE;
 }
 
 Pacman::~Pacman() {}
@@ -25,15 +27,21 @@ void Pacman::drawPacman(sf::RenderWindow &window) {
 // Handles keyboard input and updates Pacman's position
 // Movement speed is scaled by FPS and delta time for smooth, frame-independent
 // motion
-void Pacman::movement(float deltaTimer, const int FPS) {
+void Pacman::movement(float deltaTimer, const int FPS, GameState &gameState) {
+  if (gameState != GameState::PLAYING)
+    return;
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::Up)) {
-    pacmanPosition.y -= 3 * FPS * deltaTimer; // Move up
+    pacmanPosition.y -= PACMAN_SPEED * FPS * deltaTimer; // Move up
+    pacmanDirection = Direction::UP; 
   } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::Down)) {
-    pacmanPosition.y += 3 * FPS * deltaTimer; // Move down
+    pacmanPosition.y += PACMAN_SPEED * FPS * deltaTimer; // Move down
+    pacmanDirection = Direction::DOWN; 
   } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::Left)) {
-    pacmanPosition.x -= 3 * FPS * deltaTimer; // Move left
+    pacmanPosition.x -= PACMAN_SPEED * FPS * deltaTimer; // Move left
+    pacmanDirection = Direction::LEFT; 
   } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::Right)) {
-    pacmanPosition.x += 3 * FPS * deltaTimer; // Move right
+    pacmanPosition.x += PACMAN_SPEED * FPS * deltaTimer; // Move right
+    pacmanDirection = Direction::RIGHT; 
   }
   pacmanShape.setPosition(pacmanPosition);
 }

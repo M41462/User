@@ -32,6 +32,7 @@ public:
 
   // Collision detection
   bool isWallCollision(sf::CircleShape &pacmanShape);
+  bool isWallCollision(sf::RectangleShape &ghostsShape);
   int checkPelletCollision(
       sf::CircleShape &pacmanShape); // Returns 1 for pellet, 2 for power pellet
 

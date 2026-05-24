@@ -10,6 +10,8 @@
 #include <SFML/Window/WindowEnums.hpp>
 #include <iostream>
 #include <optional>
+#include <stdexcept>
+#include <vector>
 
 namespace pacman {
 
@@ -20,8 +22,7 @@ Game::Game() {
                 SCREEN_TITLE.data(), sf::Style::Default);
 
   if (!window.isOpen()) {
-    std::cerr << "Failed to create window" << std::endl;
-    return;
+    throw std::runtime_error("Error opening window");
   }
 
   // Configure window settings
@@ -41,30 +42,45 @@ Game::Game() {
     ghosts.setGhostsPositions(i, spawnPositions[i]);
   }
 
-  gameState = GameState::PLAYING;
+  gameState = GameState::MENU;
 }
 
-// Verify that all external assets (icon, music, sounds, font) load correctly.
-// Errors are printed but the game continues.
 inline void checkResources(sf::RenderWindow &window, Entity &entity) {
-  // Initialize window icon and sounds
-  entity.setIconWindow(window);
-  if (entity.loadMenuMusic()) {
-    entity.playMenuMusic();
-  }
-  if (!entity.loadFoodSound()) {
-    std::cerr << "Game will run without pellet sound effects" << std::endl;
-  }
-  if (!entity.loadPowerFoodSound()) {
-    std::cerr << "Game will run without power pellet sound effects"
-              << std::endl;
-  }
-  if (!entity.loadPacmanDeathSound()) {
-    std::cerr << "Game will run without death sound effects" << std::endl;
+  try {
+    entity.setIconWindow(window);
+  } catch (const std::exception &e) {
+    std::cerr << "Warning: " << e.what() << " (no icon)" << std::endl;
   }
 
-  if (!entity.initGameFont()) {
-    std::cerr << "Game will run without font" << std::endl;
+  try {
+    entity.loadMenuMusic();
+    entity.playMenuMusic();
+  } catch (const std::exception &e) {
+    std::cerr << "Warning: " << e.what() << std::endl;
+  }
+
+  try {
+    entity.loadFoodSound();
+  } catch (const std::exception &e) {
+    std::cerr << "Game will run without pellet sound" << std::endl;
+  }
+
+  try {
+    entity.loadPowerFoodSound();
+  } catch (const std::exception &e) {
+    std::cerr << "Game will run without power pellet sound" << std::endl;
+  }
+
+  try {
+    entity.loadPacmanDeathSound();
+  } catch (const std::exception &e) {
+    std::cerr << "Game will run without death sound" << std::endl;
+  }
+
+  try {
+    entity.initGameFont();
+  } catch (const std::exception &e) {
+    std::cerr << "Warning: " << e.what() << " (no font)" << std::endl;
   }
 }
 
@@ -92,24 +108,28 @@ void Game::run() {
     float dt = deltaTime.asSeconds();
 
     // Render current frame
-    render();
+    render(running);
 
-    if (ghosts.ghostsPacmanCollision(pacman.getPacmanShape()) &&
-        windowClock.getElapsedTime().asSeconds() >= 1.5) {
-      pacman.setLives();
-      pacman.setPacmanPosition(map.getPacmanSpawnPosition());
-      entity.playPacmanDeathSound();
-      windowClock.restart();
-    }
     // Update game state after initial delay
     if (windowClock.getElapsedTime().asSeconds() >= 3.5f) {
+      if (ghosts.ghostsPacmanCollision(pacman.getPacmanShape()) &&
+          windowClock.getElapsedTime().asSeconds() >= 1.5) {
+        gameState = GameState::RESET;
+        pacman.setLives();
+
+        entity.playPacmanDeathSound();
+        windowClock.restart();
+      }
       update(dt);
+      if (gameState == GameState::RESET) {
+        pacman.setPacmanPosition(map.getPacmanSpawnPosition());
+        gameState = GameState::PLAYING;
+      }
     }
   }
 
   // Cleanup and save score
-  utils.writeScore();
-  std::cout << State::getGameState(gameState);
+  utils.writeScore(gameState);
 }
 
 // Process window events and keyboard input; updates gameState and running flag.
@@ -118,20 +138,22 @@ void Game::processEvents(const std::optional<sf::Event> event, bool &running) {
     return;
   }
   // Handle keyboard input
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::Escape)) {
-    gameState = GameState::PAUSED;
-  } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::Q)) {
+  switch (gameState) {
+  case GameState::VICTORY:
+  case GameState::LOSE:
     running = false;
     windowClock.restart();
-  } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::M)) {
-    gameState = GameState::MENU;
-  } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::P)) {
-    gameState = GameState::PLAYING;
-  } else if (gameState == GameState::VICTORY || gameState == GameState::LOSE) {
-    running = false;
-    windowClock.restart();
-  }
+    break;
 
+  default:
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::Escape)) {
+      gameState = GameState::MENU;
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::Q)) {
+      running = false;
+      windowClock.restart();
+    }
+    break;
+  }
   // Handle window close event
   if (event->is<sf::Event::Closed>()) {
     window.close();
@@ -142,15 +164,24 @@ void Game::processEvents(const std::optional<sf::Event> event, bool &running) {
 // Update entities, handle collisions, and manage game state.
 void Game::update(float dt) {
   // Store previous position for collision handling
-  sf::Vector2f oldPos = pacman.getPacmanPosition();
+  sf::Vector2f oldPacmanPos = pacman.getPacmanPosition();
+  std::vector<sf::Vector2f> oldGhostsPos(MAX_GHOSTS);
+  for (int i = 0; i < MAX_GHOSTS; i++)
+    oldGhostsPos[i] = ghosts.getGhostsPositions(i);
 
   // Update entity positions
-  pacman.movement(dt, Game::TARGET_FPS);
+  pacman.movement(dt, Game::TARGET_FPS, gameState);
   ghosts.movement(pacman.getPacmanPosition(), dt, Game::TARGET_FPS);
+  sf::Vector2f test = ghosts.getGhostsPositions(0);
 
   // Handle wall collisions
   if (map.isWallCollision(pacman.getPacmanShape())) {
-    pacman.setPacmanPosition(oldPos);
+    pacman.setPacmanPosition(oldPacmanPos);
+  }
+  for (int i = 0; i < MAX_GHOSTS; i++) {
+    if (map.isWallCollision(ghosts.getGhostShape(i))) {
+      ghosts.setGhostsPositions(i, oldGhostsPos[i]);
+    }
   }
 
   // Check for pellet collisions and update score
@@ -168,12 +199,12 @@ void Game::update(float dt) {
 }
 
 // Render one frame: clear, draw map, Pacman, ghosts, UI, then display.
-void Game::render() {
+void Game::render(bool &running) {
   window.clear(sf::Color::Black);
   map.drawMap(window);
   pacman.drawPacman(window);
   ghosts.drawGhosts(window);
-  entity.drawGameFont(window, gameState);
+  entity.drawGameFont(window, gameState, utils, running);
   window.display();
 }
 
