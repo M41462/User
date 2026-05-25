@@ -125,7 +125,7 @@ void Game::run() {
 
 void Game::resetGame() {
   map.resetMap();
-  entity.playMenuMusic(); 
+  entity.playMenuMusic();
   pacman.resetLives();
   pacman.resetAnimation();
   pacman.setPosition(map.getPacmanStartPos());
@@ -174,7 +174,8 @@ void Game::update(float dt) {
     oldGhostPositions[i] = ghosts.getPosition(i);
 
   pacman.update(dt, TARGET_FPS, gameState);
-  //ghosts.update(map, pacman.getPosition(), pacman.getDirection(), dt,TARGET_FPS, gameState);
+  ghosts.update(map, pacman.getPosition(), pacman.getDirection(), dt,
+                TARGET_FPS, gameState);
 
   if (map.checkWallCollision(pacman.getSprite())) {
     pacman.setPosition(oldPacmanPos);

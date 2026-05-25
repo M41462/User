@@ -1,2 +1,2 @@
 player Score : 0
-Game Status : PLAYING
+Game Status : MENU
