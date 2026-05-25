@@ -15,41 +15,41 @@
 
 namespace pacman {
 
-// Top-level game controller. Owns the window, map, entities, and game loop.
-// Manages game state, input, updates, and rendering.
 class Game {
 public:
   Game();
   ~Game();
 
-  // Screen dimensions accessors
   constexpr unsigned int getWindowHeight() const { return SCREEN_HEIGHT; }
   constexpr unsigned int getWindowWidth() const { return SCREEN_WIDTH; }
 
-  // Main game loop entry point
   void run();
 
 private:
-  Map map;             // Game map with walls, pellets, and spawn points
-  Entity entity;       // Handles window icon and sound effects
-  Pacman pacman;       // Player-controlled character
-  GameState gameState; // Current game state (playing, paused, etc.)
-  Utils utils;         // Score and file utilities
-  Ghost ghosts;        // Enemy ghosts
+  Map map;
+  Entity entity;
+  Pacman pacman;
+  GameState gameState;
+  Utils utils;
+  Ghost ghosts;
+  State stateHelper;
 
-  // Screen configuration
-  static constexpr unsigned int SCREEN_HEIGHT = 992;
+  bool loseTriggered = false;
+
+  static constexpr unsigned int SCREEN_HEIGHT = 1078;
   static constexpr unsigned int SCREEN_WIDTH = 896;
   static constexpr std::string_view SCREEN_TITLE = "PACMAN GAME";
   static constexpr int TARGET_FPS = 60;
 
-  sf::RenderWindow window; // Main game window
-  sf::Clock windowClock;   // Tracks time for game events
+  sf::RenderWindow window;
+  sf::Clock windowClock;
+  sf::Clock endClock;
 
-  // Core game loop functions
   void processEvents(const std::optional<sf::Event> event, bool &running);
-  void update(float dt);      // Updates game state
-  void render(bool &running); // Renders current frame
+  void update(float dt);
+  void render(bool &running);
+  void resetGame();
+  void loadGameResources();
 };
 
 } // namespace pacman

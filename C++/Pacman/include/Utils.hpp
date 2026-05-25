@@ -10,24 +10,25 @@
 
 namespace pacman {
 
-// Utility class for score management and file operations.
 class Utils {
 public:
   Utils();
   ~Utils();
 
-  // Score management
-  void eatPellet();                      // Increment score for regular pellet
-  void eatPowerPellet();                 // Increment score for power pellet
-  void printScore();                     // Print current score to console
-  void writeScore(GameState &gameState); // Save score to file
-  void choseOptions(sf::RenderWindow &window, GameState &gameState,
-                    bool &running, sf::Text text[MAX_TEXT]);
+  void consumePellet();
+  void consumePowerPellet();
+  void writeScore(GameState &gameState);
+  void handleMenuSelection(sf::RenderWindow &window, GameState &gameState,
+                           bool &running, sf::Text text[MAX_TEXT]);
+
+  static inline int getScore() { return score; }
+  static void resetScore();
+  static void resetChoice();
 
 private:
-  static inline int score = 0; // Current game score
-  static inline int choise = 1;
-  std::string dataFilePath = "assets/data/data.txt";
+  static inline int score = 0;
+  static inline int choice = 1;
+  std::string scoreFilePath = "assets/data/data.txt";
 };
 
 } // namespace pacman

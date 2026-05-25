@@ -1,116 +1,168 @@
 #include "../include/Entity.hpp"
+#include "GameState.hpp"
 #include <SFML/Audio/Sound.hpp>
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/Text.hpp>
+#include <iostream>
 #include <stdexcept>
 
 namespace pacman {
 
-// Constructor – initialise audio buffers, set default volumes, enable font
-// smoothing, and configure menu text.
 Entity::Entity()
-    : foodSound(eatBuffer), powerFoodSound(powerEatBuffer),
-      deathSound(deathBuffer), title(gameFont), play(gameFont), exit(gameFont) {
-  startMusic.setVolume(30.f); // Background music volume
-  foodSound.setVolume(30.f);  // Sound effect volume
-  gameFont.setSmooth(true);
+    : pelletSound(pelletBuffer), powerPelletSound(powerPelletBuffer),
+      deathSound(deathBuffer), title(menuFont), playLabel(menuFont),
+      exitLabel(menuFont), scoreText(scoreFont), livesText(livesFont),
+      winText(winFont), loseText(loseFont), restartText(restartFont) {
+  menuMusic.setVolume(30.f);
+  pelletSound.setVolume(30.f);
+  menuFont.setSmooth(true);
 
   title.setPosition({330.f, 150.f});
-  play.setPosition({370.f, 350.f});
-  exit.setPosition({370.f, 550.f});
+  playLabel.setPosition({370.f, 350.f});
+  exitLabel.setPosition({370.f, 550.f});
 
   title.setString("PACMAN");
-  play.setString("Play");
-  exit.setString("Exit");
+  playLabel.setString("Play");
+  exitLabel.setString("Exit");
+
   title.setFillColor(sf::Color::Green);
-  texts[0].setString("PACMAN");
-  texts[1].setString("Play");
-  texts[2].setString("Exit");
-  texts[0].setPosition({330.f, 150.f});
-  texts[1].setPosition({370.f, 350.f});
-  texts[2].setPosition({370.f, 550.f});
-  for (auto &t : texts)
+
+  menuTexts[0].setString("PACMAN");
+  menuTexts[1].setString("Play");
+  menuTexts[2].setString("Exit");
+
+  menuTexts[0].setPosition({330.f, 150.f});
+  menuTexts[1].setPosition({370.f, 350.f});
+  menuTexts[2].setPosition({370.f, 550.f});
+
+  for (auto &t : menuTexts)
     t.setCharacterSize(40);
+
+  scoreText.setFillColor(sf::Color::White);
+  scoreText.setStyle(sf::Text::Bold);
+  scoreText.setCharacterSize(30);
+  scoreText.setPosition({50, 1010});
+
+  livesText.setFillColor(sf::Color::White);
+  livesText.setStyle(sf::Text::Bold);
+  livesText.setCharacterSize(30);
+  livesText.setPosition({670, 1010});
+
+  restartText.setPosition({150, 500});
+
+  winText.setString("YOU WIN");
+  loseText.setString("YOU LOSE GAME OVER");
+  restartText.setString("Press r or <ENTER> to restart");
+
+  winText.setFillColor(sf::Color::Green);
+  loseText.setFillColor(sf::Color::Red);
+  restartText.setFillColor(sf::Color::White);
+
+  winText.setStyle(sf::Text::Bold);
+  loseText.setStyle(sf::Text::Bold);
+  restartText.setStyle(sf::Text::Bold);
+
+  winText.setCharacterSize(30);
+  loseText.setCharacterSize(30);
+  restartText.setCharacterSize(30);
 }
 
-// Destructor: SFML resources (fonts, sounds, textures) are RAII-managed and
-// released automatically.
 Entity::~Entity() {}
 
-// Load and set the window icon from assets/game.png (error logged if missing).
-void Entity::setIconWindow(sf::RenderWindow &window) {
-  if (!icon.loadFromFile("assets/logo/game.png"))
-    throw std::runtime_error("Failed to load window icon: assets/game.png");
+void Entity::setWindowIcon(sf::RenderWindow &window) {
+  if (!icon.loadFromFile(iconPath))
+    throw std::runtime_error("Failed to load window icon");
   window.setIcon(icon.getSize(), icon.getPixelsPtr());
 }
 
-// Load menu background music; returns false and logs an error on failure.
 bool Entity::loadMenuMusic() {
-  if (!startMusic.openFromFile(menuMusicPath.c_str())) {
+  if (!menuMusic.openFromFile(menuMusicPath.c_str())) {
     throw std::runtime_error("Error playing music");
   }
   return true;
 }
 
-// Plays menu background music
-void Entity::playMenuMusic() { startMusic.play(); }
+void Entity::playMenuMusic() { menuMusic.play(); }
 
-// Load sound for regular pellets; logs error on failure.
-bool Entity::loadFoodSound() {
-  if (!eatBuffer.loadFromFile(eatPelletPath)) {
+bool Entity::loadPelletSound() {
+  if (!pelletBuffer.loadFromFile(pelletSoundPath)) {
     throw std::runtime_error("Error loading pellet sound");
   }
   return true;
 }
 
-// Load sound for power pellets; logs error on failure.
-bool Entity::loadPowerFoodSound() {
-  if (!powerEatBuffer.loadFromFile(eatPowerPelletPath)) {
+bool Entity::loadPowerPelletSound() {
+  if (!powerPelletBuffer.loadFromFile(powerPelletSoundPath)) {
     throw std::runtime_error("Error loading power pellet sound");
   }
   return true;
 }
 
-// Plays sound effect for regular pellet collection (if not already playing)
-void Entity::playFoodSound() {
-  if (foodSound.getStatus() != sf::Sound::Status::Playing) {
-    foodSound.play();
+void Entity::playPelletSound() {
+  if (pelletSound.getStatus() != sf::Sound::Status::Playing) {
+    pelletSound.play();
   }
 }
 
-// Plays sound effect for power pellet collection (if not already playing)
-void Entity::playPowerFoodSound() {
-  if (powerFoodSound.getStatus() != sf::Sound::Status::Playing) {
-    powerFoodSound.play();
+void Entity::playPowerPelletSound() {
+  if (powerPelletSound.getStatus() != sf::Sound::Status::Playing) {
+    powerPelletSound.play();
   }
 }
 
-// Load sound for Pacman's death. Logs error on failure.
-bool Entity::loadPacmanDeathSound() {
+bool Entity::loadDeathSound() {
   if (!deathBuffer.loadFromFile(deathSoundPath)) {
     throw std::runtime_error("Error loading death sound");
   }
   return true;
 }
 
-void Entity::playPacmanDeathSound() {
+void Entity::playDeathSound() {
   if (deathSound.getStatus() != sf::Sound::Status::Playing) {
     deathSound.play();
   }
 }
-// Initialise the game font. Returns true on success; false with an error
-// message on failure.
-bool Entity::initGameFont() {
-  if (!gameFont.openFromFile(gameFontPath)) {
-    throw std::runtime_error("Error loading the game font");
+
+bool Entity::loadFonts() {
+  if (!menuFont.openFromFile(gameFontPath)) {
+    throw std::runtime_error("Error loading the menu game font");
+  }
+  if (!scoreFont.openFromFile(fontPath)) {
+    throw std::runtime_error("Error loading the score game font");
+  }
+  if (!livesFont.openFromFile(fontPath)) {
+    throw std::runtime_error("Error loading the lives game font");
+  }
+  if (!winFont.openFromFile(fontPath)) {
+    throw std::runtime_error("Error loading the win game font");
+  }
+  if (!loseFont.openFromFile(fontPath)) {
+    throw std::runtime_error("Error loading the lose game font");
+  }
+  if (!restartFont.openFromFile(fontPath)) {
+    throw std::runtime_error("Error loading the restart game font");
   }
   return true;
 }
 
-// Draw menu texts (title, Play, Exit) when the game is in MENU or PAUSED state.
-void Entity::drawGameFont(sf::RenderWindow &window, GameState &gameState,
-                          Utils &utils, bool &running) {
-  utils.choseOptions(window, gameState, running, texts);
+void Entity::drawUI(sf::RenderWindow &window, GameState &gameState,
+                    Utils &utils, bool &running, int pacmanLives) {
+  std::stringstream ss;
+  ss << "Score : " << Utils::getScore();
+  scoreText.setString(ss.str());
+  window.draw(scoreText);
+
+  if (gameState == GameState::LOSE || gameState == GameState::VICTORY) {
+    window.draw(restartText);
+  }
+
+  ss.str("");
+  ss << "Lives : " << pacmanLives;
+  livesText.setString(ss.str());
+  window.draw(livesText);
+
+  utils.handleMenuSelection(window, gameState, running, menuTexts);
 }
 
 } // namespace pacman

@@ -3,51 +3,49 @@
 
 #include "Entity.hpp"
 #include "GameState.hpp"
-#include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/System/Vector2.hpp>
 
-#define PACMAN_TEXTURES 4
-
 namespace pacman {
 
-// Player-controlled Pac-Man character with keyboard movement.
-// Handles rendering, movement, and position management.
 class Pacman {
 public:
   Pacman();
   ~Pacman();
 
-  // Render Pacman on the given window
-  void drawPacman(sf::RenderWindow &window);
+  void render(sf::RenderWindow &window);
+  void update(float deltaTimer, const int FPS, GameState &gameState);
+  void resetAnimation() { animTimer = 0.f; }
+  bool loadTextures();
 
-  // Handle keyboard input and update position
-  void movement(float deltaTimer, const int FPS, GameState &gamestate);
-  const unsigned int getPacmanLives() { return this->lives; }
-  void setLives() { this->lives--; }
-  bool loadPacmanTextures();
+  int getLives() const { return lives; }
+  Direction getDirection() const { return direction; }
+  sf::Sprite &getSprite() { return sprite; }
+  sf::Vector2f getPosition() const { return position; }
 
-  // Getters and setters
-  sf::Sprite &getPacmanShape() { return pacmanShape; }
-  sf::Vector2f getPacmanPosition() const { return pacmanPosition; }
-  void setPacmanPosition(sf::Vector2f newPosition) {
-    pacmanPosition = newPosition;
-  }
-
-  sf::RectangleShape getDebugRectangle() const;
+  void setPosition(sf::Vector2f newPosition) { position = newPosition; }
+  void setDirection(Direction newDir) { direction = newDir; }
+  void loseLife();
+  void resetLives() { lives = 3; }
 
 private:
-  static constexpr float PACMAN_SPEED = 3.0f;
-  Direction pacmanDirection;
-  sf::Sprite pacmanShape; // Visual representation of Pacman
-  sf::Texture pacmanTexture[PACMAN_TEXTURES];
-  const std::string pacmanTexturePath[PACMAN_TEXTURES] = {
+  static constexpr float SPEED = 3.0f;
+  static constexpr int FRAME_SIZE = 32;
+  static constexpr int FRAMES_PER_DIR = 2;
+  static constexpr float ANIMATION_SPEED = 8.f;
+  static constexpr int TEXTURE_COUNT = 4;
+
+  Direction direction;
+  sf::Sprite sprite;
+  sf::Texture texture[TEXTURE_COUNT];
+  const std::string texturePaths[TEXTURE_COUNT] = {
       "assets/textures/pacman_down.png", "assets/textures/pacman_left.png",
       "assets/textures/pacman_right.png", "assets/textures/pacman_up.png"};
-  sf::Vector2f pacmanPosition; // Current position in world coordinates
-  static inline unsigned int lives = 3;
+  sf::Vector2f position;
+  static inline int lives = 3;
+  float animTimer = 0.f;
 };
 
 } // namespace pacman

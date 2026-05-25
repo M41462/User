@@ -8,60 +8,71 @@
 #include <SFML/Audio/Sound.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Text.hpp>
+#include <string>
 
-enum class Direction {DOWN = 0 , LEFT, RIGHT, UP , NONE };
+enum class Direction { DOWN = 0, LEFT, RIGHT, UP, NONE };
 
 namespace pacman {
 
-// Base entity handling shared setup (window icon, sound effects, etc.).
-// Provides common functionality for all game entities.
 class Entity {
 public:
   Entity();
-  virtual ~Entity();
+  ~Entity();
 
-  // Window setup
-  void setIconWindow(sf::RenderWindow &window);
+  void setWindowIcon(sf::RenderWindow &window);
 
-  // Menu music
   bool loadMenuMusic();
   void playMenuMusic();
 
-  // Sound effects
-  bool loadFoodSound();      // Load regular pellet sound
-  void playFoodSound();      // Play regular pellet sound
-  bool loadPowerFoodSound(); // Load power pellet sound
-  void playPowerFoodSound(); // Play power pellet sound
-  bool loadPacmanDeathSound();
-  void playPacmanDeathSound();
-  bool initGameFont();
-  void drawGameFont(sf::RenderWindow &window, GameState &gameState,
-                    Utils &utils, bool &running);
+  bool loadPelletSound();
+  void playPelletSound();
+  bool loadPowerPelletSound();
+  void playPowerPelletSound();
+  bool loadDeathSound();
+  void playDeathSound();
+
+  bool loadFonts();
+  void drawUI(sf::RenderWindow &window, GameState &gameState, Utils &utils,
+              bool &running, int pacmanLives);
+
+  sf::Text &getWinText() { return winText; }
+  sf::Text &getLoseText() { return loseText; }
 
 private:
-  sf::Image icon;                 // Window icon
-  sf::Music startMusic;           // Background music
-  sf::SoundBuffer eatBuffer;      // Buffer for pellet sound
-  sf::Sound foodSound;            // Sound for pellet collection
-  sf::SoundBuffer powerEatBuffer; // Buffer for power pellet sound
-  sf::Sound powerFoodSound;       // Sound for power pellet collection
+  sf::Image icon;
+  sf::Music menuMusic;
+  sf::SoundBuffer pelletBuffer;
+  sf::Sound pelletSound;
+  sf::SoundBuffer powerPelletBuffer;
+  sf::Sound powerPelletSound;
   sf::SoundBuffer deathBuffer;
-  sf::Sound deathSound; // Sound for pacman death;
-  sf::Font gameFont;
+  sf::Sound deathSound;
+  sf::Font menuFont;
+  sf::Font scoreFont;
   sf::Text title;
-  sf::Text play;
-  sf::Text exit;
-  sf::Text texts[MAX_TEXT] = {title, play, exit};
+  sf::Text playLabel;
+  sf::Text exitLabel;
+  sf::Text menuTexts[MAX_TEXT] = {title, playLabel, exitLabel};
+  sf::Text scoreText;
+  sf::Text livesText;
+  sf::Font livesFont;
+  sf::Text winText;
+  sf::Text loseText;
+  sf::Font winFont;
+  sf::Font loseFont;
+  sf::Font restartFont;
+  sf::Text restartText;
 
-  // File paths for audio assets
-  // Audio asset file paths
   const std::string menuMusicPath = "assets/sounds/start_music.wav";
-  const std::string eatPelletPath = "assets/sounds/pacman_chomp.wav";
-  const std::string eatPowerPelletPath = "assets/sounds/pacman_eatfruit.wav";
+  const std::string pelletSoundPath = "assets/sounds/pacman_chomp.wav";
+  const std::string powerPelletSoundPath = "assets/sounds/pacman_eatfruit.wav";
   const std::string deathSoundPath = "assets/sounds/pacman_death.wav";
   const std::string gameFontPath = "assets/fonts/pac-font.ttf";
+  const std::string iconPath = "assets/logo/game.png";
+  const std::string fontPath = "assets/fonts/Joystix.TTF";
 };
 
 } // namespace pacman

@@ -1,2 +1,2 @@
-player Score : 41
+player Score : 0
 Game Status : PLAYING

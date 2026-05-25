@@ -1,6 +1,9 @@
 #ifndef GAMESTATE_HPP
 #define GAMESTATE_HPP
 
+#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Text.hpp>
+#include <SFML/System/Vector2.hpp>
 #include <string>
 
 namespace pacman {
@@ -37,6 +40,16 @@ struct State {
       return Reset;
     default:
       return "Unknown";
+    }
+  }
+  void drawGameStatus(sf::RenderWindow &window, GameState &gameState,
+                      sf::Text &winText, sf::Text &loseText) {
+    if (gameState == GameState::VICTORY) {
+      winText.setPosition({350, 1010});
+      window.draw(winText);
+    } else if (gameState == GameState::LOSE) {
+      loseText.setPosition({270, 1010});
+      window.draw(loseText);
     }
   }
 };
