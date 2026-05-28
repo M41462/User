@@ -1,9 +1,12 @@
-#include "./Game.hpp"
-#include "./alien.hpp"
-#include "Space.hpp"
-#include "common.hpp"
 #include <cstdio>
+
 #include <iostream>
+
+#include "./Game.hpp"
+
+#include "Space.hpp"
+
+#include "./alien.hpp"
 
 namespace {
 Sound g_explosionSound;

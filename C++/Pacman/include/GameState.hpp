@@ -45,10 +45,10 @@ struct State {
   void drawGameStatus(sf::RenderWindow &window, GameState &gameState,
                       sf::Text &winText, sf::Text &loseText) {
     if (gameState == GameState::VICTORY) {
-      winText.setPosition({350, 1010});
+      winText.setPosition({370, 1010});
       window.draw(winText);
     } else if (gameState == GameState::LOSE) {
-      loseText.setPosition({270, 1010});
+      loseText.setPosition({275, 1010});
       window.draw(loseText);
     }
   }

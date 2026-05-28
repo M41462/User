@@ -1,11 +1,13 @@
-#include "UI.hpp"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_surface.h>
 #include <cmath>
+
 #include <iostream>
 #include <string>
+
+#include "UI.hpp"
 
 namespace {
 constexpr int RECT_WIDTH = 18;

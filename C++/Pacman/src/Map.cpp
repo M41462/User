@@ -1,45 +1,31 @@
-#include "../include/Map.hpp"
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/System/Vector2.hpp>
+
 #include <vector>
+
+#include "../include/Map.hpp"
 
 namespace pacman {
 //clang-format off
 const std::vector<std::string> Map::DEFAULT_MAP = {
-    "############################",
-    "#............##............#",
-    "#.####.#####.##.#####.####.#",
-    "#O####.#####.##.#####.####O#",
-    "#..........................#",
-    "#.####.##.########.##.####.#",
-    "#......##....##....##......#",
-    "######.#####.##.#####.######",
-    "######.#####.##.#####.######",
-    "######.##..........##.######",
-    "######.##.########.##.######",
-    "######.##.########.##.######",
-    "#...........GGGG...........#",
-    "#.####.#####.##.#####.####.#",
-    "#.####.#####.##.#####.####.#",
-    "#......##....##....##......#",
-    "######.##.########.##.######",
-    "######.##.########.##.######",
-    "######.##..........##.######",
-    "######.##.########.##.######",
-    "######.##.########.##.######",
-    "#............##............#",
-    "#.####.#####.##.#####.####.#",
-    "#.####.#####.##.#####.####.#",
-    "#O..##................##..O#",
-    "###.##.##.########.##.##.###",
-    "###.##.##.########.##.##.###",
-    "#......##....##P...##......#",
-    "#.########################.#",
-    "#..........................#",
-    "############################"
-};
+    "############################", "#............##............#",
+    "#.####.#####.##.#####.####.#", "#O####.#####.##.#####.####O#",
+    "#..........................#", "#.####.##.########.##.####.#",
+    "#......##....##....##......#", "######.#####.##.#####.######",
+    "######.#####.##.#####.######", "######.##..........##.######",
+    "######.##.########.##.######", "######.##.########.##.######",
+    "#...........GGGG...........#", "#.####.#####.##.#####.####.#",
+    "#.####.#####.##.#####.####.#", "#......##....##....##......#",
+    "######.##.########.##.######", "######.##.########.##.######",
+    "######.##..........##.######", "######.##.########.##.######",
+    "######.##.########.##.######", "#............##............#",
+    "#.####.#####.##.#####.####.#", "#.####.#####.##.#####.####.#",
+    "#O..##................##..O#", "###.##.##.########.##.##.###",
+    "###.##.##.########.##.##.###", "#......##....##P...##......#",
+    "#.########################.#", "#..........................#",
+    "############################"};
 //clang-format on
 Map::Map() : map(DEFAULT_MAP) {
   pellet.setRadius(1);
@@ -61,14 +47,13 @@ void Map::render(sf::RenderWindow &window) {
       switch (map[y][x]) {
       case '#':
         wall.setSize({CELL_SIZE, CELL_SIZE});
-        wall.setPosition(
-            {static_cast<float>(x * CELL_SIZE), static_cast<float>(y * CELL_SIZE)});
+        wall.setPosition({static_cast<float>(x * CELL_SIZE),
+                          static_cast<float>(y * CELL_SIZE)});
         window.draw(wall);
         break;
       case '.':
-        pellet.setPosition(
-            {static_cast<float>(x * CELL_SIZE + pelletOffset),
-             static_cast<float>(y * CELL_SIZE + pelletOffset)});
+        pellet.setPosition({static_cast<float>(x * CELL_SIZE + pelletOffset),
+                            static_cast<float>(y * CELL_SIZE + pelletOffset)});
         window.draw(pellet);
         break;
       case 'O':
@@ -115,9 +100,8 @@ bool Map::checkWallCollision(sf::Sprite &shape) {
   for (int y = 0; y < MAP_HEIGHT; y++) {
     for (int x = 0; x < MAP_WIDTH; x++) {
       if (map[y][x] == '#') {
-        sf::FloatRect wallBounds(
-            sf::Vector2f(x * CELL_SIZE, y * CELL_SIZE),
-            sf::Vector2f(CELL_SIZE, CELL_SIZE));
+        sf::FloatRect wallBounds(sf::Vector2f(x * CELL_SIZE, y * CELL_SIZE),
+                                 sf::Vector2f(CELL_SIZE, CELL_SIZE));
         if (shape.getGlobalBounds().findIntersection(wallBounds)) {
           return true;
         }

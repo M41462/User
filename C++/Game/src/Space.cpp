@@ -1,5 +1,6 @@
-#include "./Space.hpp"
 #include <iostream>
+
+#include "./Space.hpp"
 
 namespace {
 constexpr int BOUNDARY_OFFSET = 50;

@@ -1,8 +1,9 @@
-#include "alien.hpp"
-#include "Space.hpp"
 #include <cstdlib>
 #include <ctime>
+
 #include <iostream>
+
+#include "alien.hpp"
 
 namespace {
 constexpr int SCREEN_WIDTH = 700;

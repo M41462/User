@@ -1,8 +1,10 @@
 #define SDL_MAIN_HANDLED
+#include <cstdlib>
+
+#include <iostream>
+
 #include "../Include/Data.hpp"
 #include "../Include/Game.hpp"
-#include <cstdlib>
-#include <iostream>
 
 const std::string file_path = "../Data/data.txt";
 

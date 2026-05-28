@@ -1,8 +1,10 @@
-#include "./Init.h"
 #include <raylib.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "./Init.h"
 
 unsigned int SCREEN_WIDTH = 1300;
 unsigned int SCREEN_HEIGHT = 900;
@@ -296,19 +298,19 @@ void Run_TypeGame() {
   FILE *filepointer = NULL;
   Init_File(&filepointer);
   Init_Window();
-  
+
   if (seconds <= 0)
     seconds = 0.001f;
-    
+
   float accuracy = Accuracy(Text, input);
   double wps = Word_Per_Second(LetterCounter, seconds);
-  
+
 #ifdef _WIN32
   system("cls");
 #else
   system("clear");
 #endif
-  
+
   Write_File(&filepointer, accuracy, wps, Wrong_Words);
   printf("View User File Data : \n");
   Read_File(&filepointer);

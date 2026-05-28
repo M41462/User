@@ -10,43 +10,41 @@ constexpr float MAX_BRUSH_SIZE = 20.0f;
 constexpr float MIN_BRUSH_SIZE = 6.0f;
 
 struct Mouse_Position {
-    int32_t x;
-    int32_t y;
+  int32_t x;
+  int32_t y;
 };
 
 struct Brush_Struct {
-    int32_t Center_X;
-    int32_t Center_Y;
-    float Radius;
-    bool Is_Drawing;
+  int32_t Center_X;
+  int32_t Center_Y;
+  float Radius;
+  bool Is_Drawing;
 };
 
 class Brush {
 public:
-    Mouse_Position Get_Mouse_Position() { return mouse_position; }
-    Brush_Struct* Get_Brush_Struct() { return &brush_struct; }
-    SDL_Color Get_Brush_Color() { return Brush_Color; }
-    void Update_Brush_Color(SDL_Color New_Color) {
-        Brush_Color = New_Color;
-    }
-    void Init_Brush();
-    bool Check_Mouse_Interaction(Mouse_Position mouse_position, SDL_FRect rect);
-    void Increase_Brush_Size(SDL_Event& event, Brush_Struct& brush_struct);
-    void Draw_Brush(SDL_Renderer* renderer);
-    void Update_Brush(Brush_Struct* brush_struct);
+  Mouse_Position Get_Mouse_Position() { return mouse_position; }
+  Brush_Struct *Get_Brush_Struct() { return &brush_struct; }
+  SDL_Color Get_Brush_Color() { return Brush_Color; }
+  void Update_Brush_Color(SDL_Color New_Color) { Brush_Color = New_Color; }
+  void Init_Brush();
+  bool Check_Mouse_Interaction(Mouse_Position mouse_position, SDL_FRect rect);
+  void Increase_Brush_Size(SDL_Event &event, Brush_Struct &brush_struct);
+  void Draw_Brush(SDL_Renderer *renderer);
+  void Update_Brush(Brush_Struct *brush_struct);
 
 private:
-    static inline void Update_Brush_Size(float& radius) {
-        if (radius > MAX_BRUSH_SIZE) {
-            radius = MAX_BRUSH_SIZE;
-        } else if (radius < MIN_BRUSH_SIZE) {
-            radius = MIN_BRUSH_SIZE;
-        }
+  static inline void Update_Brush_Size(float &radius) {
+    if (radius > MAX_BRUSH_SIZE) {
+      radius = MAX_BRUSH_SIZE;
+    } else if (radius < MIN_BRUSH_SIZE) {
+      radius = MIN_BRUSH_SIZE;
     }
+  }
 
-    static inline SDL_Color Brush_Color = {255, 255, 255, 255};
-    Brush_Struct brush_struct = {0, 0, 0, false};
-    Mouse_Position mouse_position = {0, 0};
+  static inline SDL_Color Brush_Color = {255, 255, 255, 255};
+  Brush_Struct brush_struct = {0, 0, 0, false};
+  Mouse_Position mouse_position = {0, 0};
 };
 
 #endif

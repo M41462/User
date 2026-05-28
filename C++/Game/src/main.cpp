@@ -1,10 +1,13 @@
 
-#include "./Game.hpp"
-#include "common.hpp"
 #include <cstdlib>
-#include <iostream>
 #include <raylib.h>
+
+#include <iostream>
 #include <time.h>
+
+#include "common.hpp"
+
+#include "./Game.hpp"
 
 #define WIDTH 700
 #define HEIGHT 650

@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Laser.hpp"
 #include <raylib.h>
+
+#include "Laser.hpp"
 
 class SpaceShip {
 public:

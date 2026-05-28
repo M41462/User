@@ -1,6 +1,6 @@
 # Projects
 
-C and C++ projects - games, tools, and utilities.
+C, C++, and Python projects - games, tools, and utilities.
 
 ## C Projects
 
@@ -30,10 +30,18 @@ C and C++ projects - games, tools, and utilities.
 | [OMORI](./C++/OMORI/) | OMORI-inspired exploration game |
 | [Quiz](./C++/Quiz/) | Quiz game with heart character |
 | [MPlayer](./C++/MPlayer/) | Music player with visualizer |
+| [Pacman](./C++/Pacman/) | Classic Pac-Man game with C++20 and SFML |
+
+## Python Projects
+
+| Project | Description |
+|---------|-------------|
+| [DigitRecognition](./Python/DigitRecognition/) | CNN-based handwritten digit recognition using TensorFlow/Keras |
 
 ## Building
 
-Each project has a Makefile. Navigate to the project folder and run:
+### C Projects
+Each C project has a Makefile. Navigate to the project folder and run:
 
 ```bash
 make        # Build
@@ -43,6 +51,26 @@ make clean  # Remove executable
 
 Works on Windows and Linux.
 
+### C++ Projects
+C++ projects use either a Makefile or CMake:
+
+```bash
+# Makefile projects
+make && make run
+
+# CMake projects (Pacman)
+mkdir -p build && cd build
+cmake .. && cmake --build .
+```
+
+### Python Projects
+Python projects use pip for dependencies:
+
+```bash
+pip install -r requirements.txt
+python main.py
+```
+
 ## Structure
 
 ```
@@ -51,22 +79,28 @@ Projects/
 │   ├── Weather/
 │   ├── TypeGame/
 │   └── ...
-└── C++/
-    ├── Game/
-    ├── PING-PONG/
-    └── ...
+├── C++/
+│   ├── Game/
+│   ├── PING-PONG/
+│   ├── Pacman/
+│   └── ...
+└── Python/
+    └── DigitRecognition/
 ```
 
 ## Libraries Used
 
-- **Raylib** - games, graphics
+- **Raylib** - C games and graphics
 - **SDL2** - PING-PONG, Paint, ImageViewer
-- **SFML** - MPlayer
+- **SFML** - MPlayer, Pacman
 - **libcurl** - API requests
 - **cJSON** - JSON parsing
+- **TensorFlow/Keras** - DigitRecognition CNN
+- **OpenCV** - DigitRecognition image preprocessing
 
 ## Notes
 
 - Weather app needs `OPENWEATHER_API_KEY` env variable
 - Download_YT_Links requires yt-dlp and mpv installed
 - Some games need assets (fonts, images, sounds) in specific folders
+- DigitRecognition expects 28×28 grayscale images in `digits/`

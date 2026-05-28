@@ -1,18 +1,19 @@
-#include "../Include/UI.hpp"
 #include <iostream>
 
-int main(int argc, char* argv[]) {
-    (void)argv;
-    (void)argc;
+#include "../Include/UI.hpp"
 
-    UI ui;
+int main(int argc, char *argv[]) {
+  (void)argv;
+  (void)argc;
 
-    if (ui.Init_Window()) {
-        ui.Run();
-    } else {
-        std::cerr << "Application failed to initialize." << std::endl;
-        return EXIT_FAILURE;
-    }
+  UI ui;
 
-    return EXIT_SUCCESS;
+  if (ui.Init_Window()) {
+    ui.Run();
+  } else {
+    std::cerr << "Application failed to initialize." << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  return EXIT_SUCCESS;
 }

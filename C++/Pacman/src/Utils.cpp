@@ -1,11 +1,13 @@
-#include "../include/Utils.hpp"
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Window/Keyboard.hpp>
+
 #include <fstream>
 #include <iostream>
 #include <ostream>
+
+#include "../include/Utils.hpp"
 
 namespace pacman {
 

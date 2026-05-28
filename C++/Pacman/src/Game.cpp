@@ -1,5 +1,3 @@
-#include "../include/Game.hpp"
-#include "GameState.hpp"
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/System/Time.hpp>
@@ -8,11 +6,16 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Window.hpp>
 #include <SFML/Window/WindowEnums.hpp>
+
 #include <exception>
 #include <iostream>
 #include <optional>
 #include <stdexcept>
 #include <vector>
+
+#include "../include/Game.hpp"
+
+#include "GameState.hpp"
 
 namespace pacman {
 

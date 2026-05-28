@@ -1,6 +1,8 @@
-#include "Data.hpp"
 #include <cstdio>
+
 #include <iostream>
+
+#include "Data.hpp"
 
 void Game_Data::Read_File_Data(const std::string &file_path) {
 

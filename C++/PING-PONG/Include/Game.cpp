@@ -1,4 +1,5 @@
 #include <SDL2/SDL_render.h>
+
 extern "C" {
 #define MINIAUDIO_IMPLEMENTATION
 #include <miniaudio.h>

@@ -61,11 +61,10 @@ private:
   sf::Texture texture[MAX_GHOSTS];
   sf::Sprite sprite[MAX_GHOSTS];
   Direction direction[MAX_GHOSTS];
-  std::string texturePaths[MAX_GHOSTS] = {
-      "assets/textures/ghost_blue_ss.png",
-      "assets/textures/ghost_orange_ss.png",
-      "assets/textures/ghost_pink_ss.png",
-      "assets/textures/ghost_red_ss.png"};
+  std::string texturePaths[MAX_GHOSTS] = {"assets/textures/ghost_blue_ss.png",
+                                          "assets/textures/ghost_orange_ss.png",
+                                          "assets/textures/ghost_pink_ss.png",
+                                          "assets/textures/ghost_red_ss.png"};
   sf::Vector2f position[MAX_GHOSTS] = {};
   sf::Vector2i lastDecisionTile[MAX_GHOSTS] = {};
   sf::Vector2i scatterTargets[MAX_GHOSTS] = {

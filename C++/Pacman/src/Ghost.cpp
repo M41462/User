@@ -1,11 +1,14 @@
-#include "../include/Ghost.hpp"
-#include "../include/Map.hpp"
 #include <SFML/System/Clock.hpp>
-#include <algorithm>
 #include <cmath>
+
+#include <algorithm>
 #include <limits>
 #include <random>
 #include <stdexcept>
+
+#include "../include/Ghost.hpp"
+
+#include "../include/Map.hpp"
 
 namespace pacman {
 
@@ -26,8 +29,8 @@ void Ghost::loadTextures() {
       throw std::runtime_error("Error loading ghost texture");
     }
     sprite[i].setTexture(texture[i]);
-    sprite[i].setTextureRect(sf::IntRect(sf::Vector2i(0, 0),
-                                         sf::Vector2i(FRAME_SIZE, FRAME_SIZE)));
+    sprite[i].setTextureRect(
+        sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(FRAME_SIZE, FRAME_SIZE)));
     sprite[i].setPosition(position[i]);
     direction[i] = Direction::NONE;
     lastDecisionTile[i] = sf::Vector2i(-1, -1);
@@ -92,13 +95,11 @@ void Ghost::render(sf::RenderWindow &window) {
       if (dirIndex >= 0 && dirIndex <= 3 && direction[i] != Direction::NONE) {
         int animFrame = static_cast<int>(animTimer) % 2;
         int frameX = (dirIndex * 2 + animFrame) * FRAME_SIZE;
-        sprite[i].setTextureRect(
-            sf::IntRect(sf::Vector2i(frameX, 0),
-                        sf::Vector2i(FRAME_SIZE, FRAME_SIZE)));
+        sprite[i].setTextureRect(sf::IntRect(
+            sf::Vector2i(frameX, 0), sf::Vector2i(FRAME_SIZE, FRAME_SIZE)));
       } else {
-        sprite[i].setTextureRect(
-            sf::IntRect(sf::Vector2i(0, 0),
-                        sf::Vector2i(FRAME_SIZE, FRAME_SIZE)));
+        sprite[i].setTextureRect(sf::IntRect(
+            sf::Vector2i(0, 0), sf::Vector2i(FRAME_SIZE, FRAME_SIZE)));
       }
     }
     window.draw(sprite[i]);
@@ -127,8 +128,8 @@ void Ghost::update(const Map &map, sf::Vector2f pacmanPosition,
 
   for (int i = 0; i < MAX_GHOSTS; i++) {
     if (isNearTileCenter(map, position[i])) {
-      sf::Vector2i tile =
-          map.worldToTile(position[i] + sf::Vector2f(FRAME_SIZE / 2.f, FRAME_SIZE / 2.f));
+      sf::Vector2i tile = map.worldToTile(
+          position[i] + sf::Vector2f(FRAME_SIZE / 2.f, FRAME_SIZE / 2.f));
       if (tile != lastDecisionTile[i] || direction[i] == Direction::NONE) {
         position[i] = tileCenterToGhostPosition(map, tile);
         direction[i] = chooseDirection(i, map, pacmanPosition, pacmanDirection);
@@ -323,8 +324,7 @@ bool Ghost::isNearTileCenter(const Map &map, sf::Vector2f ghostPosition) const {
 sf::Vector2f Ghost::tileCenterToGhostPosition(const Map &map,
                                               const sf::Vector2i &tile) const {
   sf::Vector2f center = map.tileToWorldCenter(tile);
-  return sf::Vector2f(center.x - FRAME_SIZE / 2.f,
-                      center.y - FRAME_SIZE / 2.f);
+  return sf::Vector2f(center.x - FRAME_SIZE / 2.f, center.y - FRAME_SIZE / 2.f);
 }
 
 float Ghost::distanceSquared(const sf::Vector2i &a,

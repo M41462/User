@@ -14,14 +14,14 @@
 
 class Save {
 public:
-    std::string Set_Save_Name();
-    bool Is_Save_Name_Valid();
-    void Save_To_Png(SDL_Renderer* renderer, SDL_Texture* texture);
+  std::string Set_Save_Name();
+  bool Is_Save_Name_Valid();
+  void Save_To_Png(SDL_Renderer *renderer, SDL_Texture *texture);
 
 private:
-    std::string Save_Name = "Untitled";
-    static inline int Save_Number = 0;
-    std::string Save_Path;
+  std::string Save_Name = "Untitled";
+  static inline int Save_Number = 0;
+  std::string Save_Path;
 };
 
 #endif

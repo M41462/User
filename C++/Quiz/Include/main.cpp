@@ -1,6 +1,7 @@
 
-#include "Player.hpp"
 #include <cstdlib>
+
+#include "Player.hpp"
 
 int main(int argc, char *argv[]) {
   (void)argc;

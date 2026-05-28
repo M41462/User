@@ -1,4 +1,3 @@
-#include "../include/Pacman.hpp"
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Sprite.hpp>
@@ -6,6 +5,8 @@
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/WindowBase.hpp>
+
+#include "../include/Pacman.hpp"
 
 namespace pacman {
 
@@ -21,8 +22,8 @@ bool Pacman::loadTextures() {
       throw std::runtime_error("Failed to load " + texturePaths[i]);
   }
   sprite.setScale(sf::Vector2f(0.75f, 0.75f));
-  sprite.setTextureRect(sf::IntRect(sf::Vector2i(0, 0),
-                                    sf::Vector2i(FRAME_SIZE, FRAME_SIZE)));
+  sprite.setTextureRect(
+      sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(FRAME_SIZE, FRAME_SIZE)));
   sprite.setTexture(texture[2]);
   return true;
 }
@@ -56,14 +57,12 @@ void Pacman::render(sf::RenderWindow &window) {
   if (direction != Direction::NONE) {
     animTimer += dt * ANIMATION_SPEED;
     int frame = static_cast<int>(animTimer) % FRAMES_PER_DIR;
-    sprite.setTextureRect(
-        sf::IntRect(sf::Vector2i(frame * FRAME_SIZE, 0),
-                    sf::Vector2i(FRAME_SIZE, FRAME_SIZE)));
+    sprite.setTextureRect(sf::IntRect(sf::Vector2i(frame * FRAME_SIZE, 0),
+                                      sf::Vector2i(FRAME_SIZE, FRAME_SIZE)));
   } else {
     animTimer = 0.f;
     sprite.setTextureRect(
-        sf::IntRect(sf::Vector2i(0, 0),
-                    sf::Vector2i(FRAME_SIZE, FRAME_SIZE)));
+        sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(FRAME_SIZE, FRAME_SIZE)));
   }
 
   window.draw(sprite);

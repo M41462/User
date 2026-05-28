@@ -2,12 +2,13 @@
 #include <curl/curl.h>
 #include <curl/easy.h>
 #include <json-c/json.h>
+#include <strings.h>
+
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <strings.h>
 
 #define BASE_URL "https://api.openweathermap.org/data/2.5/weather"
 #define MAX_URL_LEN 512

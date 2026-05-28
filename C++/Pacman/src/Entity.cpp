@@ -1,11 +1,14 @@
-#include "../include/Entity.hpp"
-#include "GameState.hpp"
 #include <SFML/Audio/Sound.hpp>
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Text.hpp>
+
 #include <iostream>
 #include <stdexcept>
+
+#include "../include/Entity.hpp"
+
+#include "GameState.hpp"
 
 namespace pacman {
 
