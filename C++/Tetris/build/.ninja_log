@@ -1,0 +1,20 @@
+# ninja log v7
+24	452	8026356782974513	CMakeFiles/Tetris.dir/src/Data.cpp.obj	741a3aff7a428237
+13	470	8026356782865311	CMakeFiles/Tetris.dir/src/Board.cpp.obj	417de61f63ff014e
+32	500	8026356783045340	CMakeFiles/Tetris.dir/src/Game.cpp.obj	b50c8cc6c5b7b9e5
+51	501	8026356783246264	CMakeFiles/Tetris.dir/src/main.cpp.obj	eb2905486006472b
+41	571	8026356783136289	CMakeFiles/Tetris.dir/src/Tetromino.cpp.obj	1845bfb73df6b7dd
+39	458	8026357156628364	CMakeFiles/Tetris.dir/src/Board.cpp.obj	417de61f63ff014e
+47	471	8026357156703544	CMakeFiles/Tetris.dir/src/Data.cpp.obj	741a3aff7a428237
+54	540	8026357156773940	CMakeFiles/Tetris.dir/src/Game.cpp.obj	b50c8cc6c5b7b9e5
+71	578	8026357156953520	CMakeFiles/Tetris.dir/src/main.cpp.obj	eb2905486006472b
+62	612	8026357156866311	CMakeFiles/Tetris.dir/src/Tetromino.cpp.obj	1845bfb73df6b7dd
+612	788	8026357162356247	Tetris.exe	1800df27f79ccbed
+20	432	8026358766654425	CMakeFiles/Tetris.dir/src/Data.cpp.obj	741a3aff7a428237
+13	462	8026358766579039	CMakeFiles/Tetris.dir/src/Board.cpp.obj	417de61f63ff014e
+28	511	8026358766734434	CMakeFiles/Tetris.dir/src/Game.cpp.obj	b50c8cc6c5b7b9e5
+35	524	8026358766794476	CMakeFiles/Tetris.dir/src/Tetromino.cpp.obj	1845bfb73df6b7dd
+43	555	8026358766885558	CMakeFiles/Tetris.dir/src/main.cpp.obj	eb2905486006472b
+555	706	8026358771989570	Tetris.exe	1800df27f79ccbed
+45	562	8026359094631385	CMakeFiles/Tetris.dir/src/Tetromino.cpp.obj	1845bfb73df6b7dd
+563	721	8026359099806050	Tetris.exe	1800df27f79ccbed

@@ -1,0 +1,3 @@
+C:/Users/Ilyes/Tetris/build/CMakeFiles/Tetris.dir
+C:/Users/Ilyes/Tetris/build/CMakeFiles/edit_cache.dir
+C:/Users/Ilyes/Tetris/build/CMakeFiles/rebuild_cache.dir
