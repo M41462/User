@@ -297,15 +297,4 @@ void UI::Run() {
   }
 }
 
-SDL_Texture *UI::Copy_Texture(SDL_Texture *src) {
-  if (!src || !renderer)
-    return nullptr;
 
-  int width, height;
-  SDL_QueryTexture(src, NULL, NULL, &width, &height);
-
-  SDL_Texture *dst =
-      SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888,
-                        SDL_TEXTUREACCESS_STREAMING, width, height);
-  return dst;
-}

@@ -1,43 +1,19 @@
-# Heart Quiz Adventure
+# Quiz
 
-A quiz game with Undertale-inspired visuals.
+A quiz game with Undertale-inspired visuals — answer 10 questions across geography, math, science, and literature.
 
-## Features
-- 10 challenging questions
-- 60-second timer
-- Undertale-style heart character
-- Arrow key controls
-- Background music
-- Score ranking system
+## How It Works
 
-## Requirements
-- Raylib library
-- Font files in `../Font/`
-- Music file in `../Music/`
-- Heart image in `../Img/`
+Raylib renders an 800×800 window. Control a heart-shaped character with arrow keys and collide with answer blocks to select. You have 60 seconds to finish all questions. Score is ranked at the end (S/A/B/C/D). Includes background music and a retro pixel font.
 
-## Setup
+## Build
+
 ```bash
-cd Include
-make
-cd ../Src
-./game.exe  # Windows
-./game      # Linux
+cd Include && make
 ```
 
-## Controls
-- **Arrow Keys**: Move heart character
-- **Space**: Speed up text display
-- **Enter**: Reset text animation
+Then run from the `Src/` directory:
 
-## Scoring
-- 8-10 correct: Excellent!
-- 5-7 correct: Good job!
-- 0-4 correct: Better luck next time!
-
-## Questions Cover
-- Geography (capitals)
-- Math (factorials)
-- Science (planets, chemistry)
-- Literature (authors)
-- General knowledge
+```bash
+cd ../Src && ./game.exe
+```

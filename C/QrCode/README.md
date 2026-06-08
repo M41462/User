@@ -1,41 +1,14 @@
-# QR Code Generator
+# QrCode
 
-A C program that generates QR codes from text input and saves them as PNG images using the TinyPngOut library.
+Generates QR codes from user text input and saves them as PNG images.
 
-## Features
-- Generate QR codes from user-provided text
-- Customizable mask selection (0-7)
-- High-quality PNG output using TinyPngOut
-- Configurable scaling (default 10x)
-- Error correction and validation
+## How It Works
 
-## Requirements
-- qrcodegen library
-- TinyPngOut library
-- CS50 library (for get_string and get_int functions)
-- Standard C libraries
+Uses the qrcodegen library to encode user text into a QR code matrix (Medium error correction), then writes the result as a scaled PNG image using TinyPngOut. The user selects a mask pattern (0–7) and enters the text. Output saved to `output.png`.
 
-## Setup
-1. Ensure you have the required libraries installed:
-   - qrcodegen
-   - TinyPngOut
-   - CS50
+## Build
 
-2. Compile the program:
-   ```bash
-   gcc main.c -o main.exe -lqrcodegen -ltinypngout -lcs50
-   ```
-
-## Usage
 ```bash
-./main.exe
+make
+make run
 ```
-1. Enter the mask number (0-7) when prompted
-2. Enter the text you want to encode in the QR code
-3. The program will generate `output.png` in the current directory
-
-## Notes
-- The QR code is saved as `output.png` in the project directory
-- Mask numbers affect the QR code pattern but not its readability
-- The program uses MEDIUM error correction level
-- Version ranges from MIN to MAX are automatically selected based on input size

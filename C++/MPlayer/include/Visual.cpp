@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include <algorithm>
 
 #include "Visual.hpp"
@@ -19,13 +21,15 @@ constexpr float AMPLITUDE_FACTOR = 0.1f;
 void Visual::Set_Visual() {
   for (int i = 0; i < BAR_COUNT; i++) {
     Bars[i].setSize(sf::Vector2f(BarWidth, 10.0f));
-    Bars[i].setPosition(static_cast<float>(i) * BarWidth,
-                        static_cast<float>(HEIGHT) / 2.0f + 250.0f);
+    Bars[i].setPosition(
+        sf::Vector2f(static_cast<float>(i) * BarWidth,
+                     static_cast<float>(HEIGHT) / 2.0f + 250.0f));
     Bars[i].setFillColor(sf::Color::Cyan);
 
     Reflect[i].setSize(sf::Vector2f(BarWidth - 2.0f, 5.0f));
-    Reflect[i].setPosition(static_cast<float>(i) * BarWidth,
-                           static_cast<float>(HEIGHT) / 2.0f + 250.0f);
+    Reflect[i].setPosition(
+        sf::Vector2f(static_cast<float>(i) * BarWidth,
+                     static_cast<float>(HEIGHT) / 2.0f + 250.0f));
     Reflect[i].setFillColor(sf::Color(100, 255, 255, 100));
   }
 }
@@ -38,7 +42,7 @@ sf::Color Visual::MakeColor(float loudness) {
       static_cast<unsigned char>(BASE_COLOR_B + loudness * COLOR_RANGE_B));
 }
 
-float Visual::CalculateAmplitude(float time, float frequency, int index) {
+float Visual::CalculateAmplitude(float time, int index) {
   const float baseFreq = 0.1f;
   const float freqStep = 0.05f;
   const float waveFreq = 5.0f;
@@ -54,7 +58,7 @@ void Visual::Update_Visual(sf::Music &music) {
   const float time = offset.asSeconds();
 
   for (int i = 0; i < BAR_COUNT; i++) {
-    const float amplitude = CalculateAmplitude(time, 0.1f + i * 0.05f, i);
+    const float amplitude = CalculateAmplitude(time, i);
     amplitudes[i] =
         SMOOTHING_FACTOR * amplitudes[i] + AMPLITUDE_FACTOR * amplitude;
 

@@ -10,7 +10,6 @@
 
 namespace {
 Sound g_explosionSound;
-bool g_isDestroyed = false;
 
 bool isSoundValid(Sound sound) { return sound.frameCount > 0; }
 } // namespace
@@ -28,12 +27,8 @@ Game::Game() {
 
 Game::~Game() {
   Destroy();
-  alien.Destroy_Alien();
   if (isSoundValid(g_explosionSound)) {
     UnloadSound(g_explosionSound);
-  }
-  if (ValidFont(font)) {
-    UnloadFont(font);
   }
 }
 
@@ -53,11 +48,8 @@ void Game::IsCollision() {
 
   if (alien.IsAlienShotes(spaceShip.laser)) {
     spaceShip.laser.Active = false;
-    if (!g_isDestroyed) {
-      g_isDestroyed = true;
-      if (isSoundValid(g_explosionSound)) {
-        PlaySound(g_explosionSound);
-      }
+    if (isSoundValid(g_explosionSound)) {
+      PlaySound(g_explosionSound);
     }
     Score += 10;
   }
@@ -152,27 +144,22 @@ void Game::UpdateLaser() {
 int Game::Game_Score() { return Score; }
 
 int Game::Best_Score() {
-  static int cachedBestScore = -1;
-
-  if (cachedBestScore == -1) {
-    FILE *file = fopen("Score.txt", "r");
-    if (file) {
-      if (fscanf(file, "%d", &cachedBestScore) != 1) {
-        cachedBestScore = 0;
-      }
-      fclose(file);
-    } else {
-      cachedBestScore = 0;
+  int bestScore = 0;
+  FILE *file = fopen("Score.txt", "r");
+  if (file) {
+    if (fscanf(file, "%d", &bestScore) != 1) {
+      bestScore = 0;
     }
+    fclose(file);
+  }
 
-    if (cachedBestScore < Score) {
-      cachedBestScore = Score;
-      FILE *writeFile = fopen("Score.txt", "w");
-      if (writeFile) {
-        fprintf(writeFile, "%d", cachedBestScore);
-        fclose(writeFile);
-      }
+  if (Score > bestScore) {
+    bestScore = Score;
+    FILE *writeFile = fopen("Score.txt", "w");
+    if (writeFile) {
+      fprintf(writeFile, "%d", bestScore);
+      fclose(writeFile);
     }
   }
-  return cachedBestScore;
+  return bestScore;
 }

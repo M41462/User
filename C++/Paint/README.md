@@ -1,39 +1,14 @@
 # Paint
 
-Simple paint application with SDL2.
+A drawing application with circle brushes, adjustable size, and 9 predefined colors.
 
-## Features
-- Smooth circle brush drawing
-- Adjustable brush size
-- 9 predefined colors
-- Save drawings to PNG
-- Clear canvas
+## How It Works
 
-## Requirements
-- SDL2 library
-- SDL2_image library
+SDL2 renders an 800×750 canvas. Left-click and drag to draw with a circular brush. Adjust brush size with Up/Down arrows. Pick from 9 color swatches. Press S to save as PNG to the `Saves/` folder, Enter to clear the canvas, ESC/Q to quit.
 
-## Setup
+## Build
+
 ```bash
-cd Src
-make
+cd Src && make
+make run
 ```
-
-## Usage
-```bash
-./paint.exe  # Windows
-./paint      # Linux
-```
-
-## Controls
-- **Left Mouse Button**: Draw
-- **Arrow Up**: Increase brush size
-- **Arrow Down**: Decrease brush size
-- **S**: Save to PNG (Saves folder)
-- **Enter**: Clear canvas
-- **ESC/Q**: Exit
-
-## Notes
-- Saves stored in `Saves/` folder
-- Default brush radius is 8px
-- Window size: 800x600

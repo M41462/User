@@ -16,6 +16,8 @@ void Init_File(FILE **filepointer) {
     file_exist = false;
   } else {
     file_exist = true;
+    fclose(*filepointer);
+    *filepointer = NULL;
   }
 }
 

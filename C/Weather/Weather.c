@@ -145,7 +145,7 @@ void parse_weather_data(const char *json) {
 
   char *desc_ptr = strstr(json, "\"description\":\"");
   if (desc_ptr != NULL) {
-    sscanf(desc_ptr, "\"description\":\"%[^\"]\"", description);
+    sscanf(desc_ptr, "\"description\":\"%255[^\"]\"", description);
   }
 
   char *cloud_ptr = strstr(json, "\"all\":");
@@ -155,7 +155,7 @@ void parse_weather_data(const char *json) {
 
   char *city_ptr = strstr(json, "\"name\":\"");
   if (city_ptr != NULL) {
-    sscanf(city_ptr, "\"name\":\"%[^\"]\"", city);
+    sscanf(city_ptr, "\"name\":\"%255[^\"]\"", city);
   }
 
   printf("\nWeather Information:\n");

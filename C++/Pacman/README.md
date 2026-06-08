@@ -1,43 +1,14 @@
 # Pacman
 
-A classic Pac-Man game built with C++20 and SFML.
+A faithful recreation of the classic Pac-Man arcade game using C++20 and SFML.
 
-## Build Instructions
+## How It Works
+
+Tile-based map with Pac-Man (arrow keys), four ghosts with distinct AI behaviors, pellets, power pellets, scoring, and lives. Ghosts scatter, chase, and flee when Pac-Man eats a power pellet. Includes a menu screen, sound effects, and a custom font. 896×1078 window at 60 FPS.
+
+## Build
 
 ```bash
 mkdir -p build && cd build
-cmake ..
-cmake --build .
+cmake .. && cmake --build .
 ```
-
-## Folder Structure
-
-| Folder      | Description                          |
-|-------------|--------------------------------------|
-| `assets/`   | Fonts, sounds, and textures          |
-| `include/`  | Header files (.hpp)                  |
-| `src/`      | Source files (.cpp)                  |
-| `build/`    | Build output directory               |
-
-## Roadmap
-
-### Phase 1
-- Window creation
-- Game loop
-- Event handling
-
-### Phase 2
-- Tile map
-- Player movement
-- Collision
-
-### Phase 3
-- Ghost movement
-- Pellets
-- Score system
-
-### Phase 4
-- Ghost AI
-- Menu
-- Sounds
-- Polish

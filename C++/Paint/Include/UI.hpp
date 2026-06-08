@@ -40,8 +40,6 @@ public:
   SDL_Window *Get_Window() { return window; }
   SDL_Renderer *Get_Renderer() { return renderer; }
   SDL_Texture *Get_Texture() { return texture; }
-  SDL_Texture *Copy_Texture(SDL_Texture *src);
-
 private:
   Brush brush;
   Save save;

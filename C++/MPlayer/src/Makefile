@@ -8,6 +8,7 @@ EXEC = music_player
 ifeq ($(OS),Windows_NT)
 	EXEC := $(EXEC).exe
 	RM = del /f /q
+	LDFLAGS += -lcomdlg32
 else
 	RM = rm -f
 endif

@@ -1,8 +1,9 @@
-CXX = clang++
+comma := ,
+CXX = g++
 CXXFLAGS = -std=c++11 -Wall -Wextra
 LDFLAGS = -lraylib -lm
 
-SRC = $(wildcard *.cpp)
+SRC = main.cpp Game.cpp Space.cpp alien.cpp Laser.cpp
 EXEC = main
 
 ifeq ($(OS),Windows_NT)
@@ -13,7 +14,7 @@ else
 endif
 
 all:
-	$(CXX) $(CXXFLAGS) $(SRC) -o $(EXEC) $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) $(SRC) -o $(EXEC) $(LDFLAGS) -Wl$(comma)--subsystem$(comma)console
 
 clean:
 	$(RM) $(EXEC)

@@ -1,3 +1,0 @@
-C:\msys64\ucrt64\bin\cmake.exe -E rm -f CMakeFiles\Pacman.dir/objects.a
-C:\msys64\ucrt64\bin\ar.exe qc CMakeFiles\Pacman.dir/objects.a @CMakeFiles\Pacman.dir\objects1.rsp
-C:\msys64\ucrt64\bin\clang++.exe -g -Wl,--whole-archive CMakeFiles\Pacman.dir/objects.a -Wl,--no-whole-archive -o Pacman.exe -Wl,--out-implib,libPacman.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\Pacman.dir\linkLibs.rsp

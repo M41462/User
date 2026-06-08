@@ -216,13 +216,13 @@ static void DrawGameWindow(void) {
   omori->music = LoadMusicStream("./Sound/OMORI.mp3");
   if (omori->music.ctxData == NULL) {
     TraceLog(LOG_ERROR, "Could not load music stream");
-    exit(EXIT_FAILURE);
+    goto cleanup;
   }
 
   omori->sound = LoadSound("./Sound/red-hands.mp3");
   if (omori->sound.stream.buffer == NULL) {
     TraceLog(LOG_ERROR, "Could not load sound");
-    exit(EXIT_FAILURE);
+    goto cleanup;
   }
 
   SetSoundVolume(omori->sound, 0.5f);
@@ -307,6 +307,21 @@ static void DrawGameWindow(void) {
   CloseAudioDevice();
   CloseWindow();
 
+  free(omori);
+  free(ani);
+  return;
+
+cleanup:
+  UnloadTexture(omori->textureDown);
+  UnloadTexture(omori->textureUp);
+  UnloadTexture(omori->textureLeft);
+  UnloadTexture(omori->textureRight);
+  UnloadImage(icon);
+  UnloadTexture(cat.texture);
+  UnloadTexture(door.texture);
+  UnloadFont(font);
+  CloseAudioDevice();
+  CloseWindow();
   free(omori);
   free(ani);
 }

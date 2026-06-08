@@ -1,34 +1,14 @@
-# QJG - Quote and Joke Generator
+# QJG — Quote & Joke Generator
 
-Fetches random quotes and jokes from public APIs.
+Fetches random quotes from quotable.io and random jokes from official-joke-api.appspot.com.
 
-## Features
-- Random quotes from quotable.io API
-- Random jokes from official-joke-api.appspot.com
-- Interactive menu system
-- JSON parsing with cJSON
+## How It Works
 
-## Requirements
-- libcurl
-- cJSON library
+Menu-driven console app. Uses libcurl to call free public APIs, parses the JSON response with cJSON, and displays the result. No API keys required.
 
-## Setup
+## Build
+
 ```bash
 make
+make run
 ```
-
-## Usage
-```bash
-./QJG.exe  # Windows
-./QJG      # Linux
-```
-
-Choose from menu:
-1. Get a random quote
-2. Get a random joke
-3. Exit
-
-## Notes
-- No API key required
-- Uses free public APIs
-- Clean JSON parsing and display

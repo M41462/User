@@ -1,41 +1,14 @@
-# Snake Game
+# SnakeGame
 
-A classic Snake game implementation using Raylib where the player controls a snake to eat food and grow longer.
+The classic Snake game — eat food, grow longer, avoid walls and yourself.
 
-## Features
-- Classic snake gameplay with growing body
-- Food spawns at random locations (avoiding snake body)
-- Speed increases as score increases
-- Game over conditions: hitting walls or self-collision
-- Restart functionality after game over
-- Score tracking and display
-- Background music and sound effects
+## How It Works
 
-## Requirements
-- Raylib library
-- Standard C libraries (stdio.h, stdlib.h, time.h, unistd.h, stdbool.h, stdint.h)
+Raylib renders an 800×600 grid. The snake moves continuously in the current direction (controlled by arrow keys). Food spawns randomly avoiding the snake's body. Speed increases with score. Game over on wall or self collision. Press Enter or Space to restart.
 
-## Setup
-1. Ensure you have Raylib development libraries installed
-2. Compile the program:
-   ```bash
-   gcc Snake.c -o Snake.exe -lraylib
-   ```
+## Build
 
-## Usage
 ```bash
-./Snake.exe
+make
+make run
 ```
-Game Controls:
-- Arrow Keys: Change snake direction (Up, Down, Left, Right)
-- ENTER or SPACE: Restart after game over
-- ESC or Q: Quit the game
-
-## Objective
-Eat as much food as possible to grow your snake and achieve the highest score without crashing into walls or yourself.
-
-## Notes
-- Snake starts at position (400, 300) in an 800x600 window
-- Initial speed is 0.81f, increases with score
-- Food is represented as a red circle, snake body as green rectangles
-- When game over, press ENTER or SPACE to restart or ESC/Q to quit

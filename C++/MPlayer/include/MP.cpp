@@ -30,38 +30,38 @@ void MPlayer::setupTextStyle(sf::Text &txt, const std::string &str,
 }
 
 void MPlayer::drawText(sf::RenderWindow &window) {
-  text.setFont(font);
-  text.setCharacterSize(30);
-  text.setFillColor(sf::Color::White);
-  text.setPosition(sf::Vector2f(310.0f, 9.0f));
-  text.setString(std::to_string(static_cast<int>(Get_Volume() + 1)));
+  text->setFont(font);
+  text->setCharacterSize(30);
+  text->setFillColor(sf::Color::White);
+  text->setPosition(sf::Vector2f(310.0f, 9.0f));
+  text->setString(std::to_string(static_cast<int>(Get_Volume() + 1)));
 
   if (muteMusic) {
-    muteText.setFont(font);
-    muteText.setCharacterSize(30);
-    muteText.setFillColor(sf::Color::Red);
-    muteText.setPosition(sf::Vector2f(10.0f, 8.0f));
-    muteText.setString("MUTE");
-    window.draw(muteText);
+    muteText->setFont(font);
+    muteText->setCharacterSize(30);
+    muteText->setFillColor(sf::Color::Red);
+    muteText->setPosition(sf::Vector2f(10.0f, 8.0f));
+    muteText->setString("MUTE");
+    window.draw(*muteText);
   }
 
   if (isRunning) {
-    playText.setFont(font);
-    playText.setCharacterSize(30);
-    playText.setFillColor(sf::Color::Green);
-    playText.setPosition(sf::Vector2f(600.0f, 10.0f));
-    playText.setString("PLAY");
-    window.draw(playText);
+    playText->setFont(font);
+    playText->setCharacterSize(30);
+    playText->setFillColor(sf::Color::Green);
+    playText->setPosition(sf::Vector2f(600.0f, 10.0f));
+    playText->setString("PLAY");
+    window.draw(*playText);
   } else {
-    playText.setFont(font);
-    playText.setCharacterSize(30);
-    playText.setFillColor(sf::Color::Green);
-    playText.setPosition(sf::Vector2f(600.0f, 10.0f));
-    playText.setString("PAUSE");
-    window.draw(playText);
+    playText->setFont(font);
+    playText->setCharacterSize(30);
+    playText->setFillColor(sf::Color::Green);
+    playText->setPosition(sf::Vector2f(600.0f, 10.0f));
+    playText->setString("PAUSE");
+    window.draw(*playText);
   }
 
-  window.draw(text);
+  window.draw(*text);
 }
 
 void MPlayer::Increase_Volume() {
@@ -135,6 +135,10 @@ void MPlayer::Decrease_Speed() {
   }
 }
 
+bool MPlayer::If_File_MP4(const std::string &filepath) {
+  return filepath.size() > 4 && filepath.substr(filepath.size() - 4) == ".mp4";
+}
+
 bool MPlayer::Init_Music(std::string &musicpath) {
   if (If_File_MP4(musicpath)) {
     musicpath = Convert_MP4_To_Wave(musicpath);
@@ -156,6 +160,9 @@ MPlayer::MPlayer()
 }
 
 MPlayer::~MPlayer() {
+  delete text;
+  delete muteText;
+  delete playText;
   if (window) {
     window->close();
     delete window;
@@ -193,38 +200,40 @@ void MPlayer::LoadAndPlay(std::string &filepath) {
 
 void MPlayer::Run() {
   std::system("clear");
+  text = new sf::Text(font);
+  muteText = new sf::Text(font);
+  playText = new sf::Text(font);
 
-  window->create(sf::VideoMode(700, 600), "MUSIC PLAYER",
+  window->create(sf::VideoMode(sf::Vector2u(700, 600)), "MUSIC PLAYER",
                  sf::Style::Titlebar | sf::Style::Close);
   window->setPosition(windowPosition);
   window->setFramerateLimit(60);
   visual.Set_Visual();
 
-  while (window->isOpen() && music->getStatus() != sf::Music::Stopped) {
-    sf::Event event;
-    while (window->pollEvent(event)) {
-      if (event.type == sf::Event::Closed) {
+  while (window->isOpen() && music->getStatus() != sf::Music::Status::Stopped) {
+    while (const auto event = window->pollEvent()) {
+      if (event->is<sf::Event::Closed>()) {
         window->close();
         break;
       }
-      if (event.type == sf::Event::KeyPressed) {
-        switch (event.key.code) {
-        case sf::Keyboard::Left:
+      if (const auto *keyEvent = event->getIf<sf::Event::KeyPressed>()) {
+        switch (keyEvent->code) {
+        case sf::Keyboard::Key::Left:
           Decrease_Speed();
           break;
-        case sf::Keyboard::Right:
+        case sf::Keyboard::Key::Right:
           Increase_Speed();
           break;
-        case sf::Keyboard::M:
+        case sf::Keyboard::Key::M:
           Mute_Volume();
           break;
-        case sf::Keyboard::Up:
+        case sf::Keyboard::Key::Up:
           Increase_Volume();
           break;
-        case sf::Keyboard::Down:
+        case sf::Keyboard::Key::Down:
           Decrease_Volume();
           break;
-        case sf::Keyboard::Space:
+        case sf::Keyboard::Key::Space:
           if (isRunning) {
             music->pause();
           } else {
@@ -232,12 +241,12 @@ void MPlayer::Run() {
           }
           isRunning = !isRunning;
           break;
-        case sf::Keyboard::Escape:
-        case sf::Keyboard::Q:
+        case sf::Keyboard::Key::Escape:
+        case sf::Keyboard::Key::Q:
           std::cout << "Exiting ..." << std::endl;
           window->close();
           break;
-        case sf::Keyboard::Enter:
+        case sf::Keyboard::Key::Enter:
           music->setVolume(70.0f);
           break;
         default:

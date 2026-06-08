@@ -1,47 +1,14 @@
-# Image Viewer
+# ImageViewer
 
-A simple image viewer application using SDL2 and stb_image libraries.
+An image viewer supporting JPG, PNG, TGA, BMP, PSD, GIF, HDR, and PIC formats using SDL2 and stb_image.
 
-## Features
-- Load and display images from file
-- Support for multiple image formats (JPG, PNG, TGA, BMP, PSD, GIF, HDR, PIC)
-- Window icon support
-- Smooth scaling with linear texture filtering
-- Clean resource management
+## How It Works
 
-## Supported Formats
-- JPG
-- PNG
-- TGA
-- BMP
-- PSD
-- GIF
-- HDR
-- PIC
+Loads images from the `Images/` folder using the single-header stb_image library, creates an SDL texture, and renders it in a window. Uses linear texture scaling for smooth display. Exit with ESC, Q, or close the window.
 
-## Requirements
-- SDL2 library
-- SDL2_image library
-- stb_image library (included as stb_image.h)
+## Build
 
-## Setup
-1. Ensure you have SDL2 and SDL2_image development libraries installed
-2. Compile the program:
-   ```bash
-   gcc main.c -o main.exe -lSDL2 -lSDL2_image
-   ```
-
-## Usage
 ```bash
-./main.exe
+make
+make run
 ```
-The program will load and display `./Images/example0.png` by default.
-
-## Controls
-- ESC, RETURN, or Q: Exit the application
-- Window close button: Exit the application
-
-## Notes
-- The image is loaded with RGBA conversion (4 channels)
-- Texture scale mode is set to linear for smooth scaling
-- Proper cleanup of all allocated resources on exit

@@ -35,9 +35,9 @@ private:
                       float x, float y);
 
   sf::Font font;
-  sf::Text text;
-  sf::Text muteText;
-  sf::Text playText;
+  sf::Text *text = nullptr;
+  sf::Text *muteText = nullptr;
+  sf::Text *playText = nullptr;
   Visual visual;
   const sf::Vector2i windowPosition = {350, 100};
   const sf::Color backgroundColor = {20, 20, 30, 255};

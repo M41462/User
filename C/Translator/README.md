@@ -1,33 +1,14 @@
 # Translator
 
-A translation tool that uses Google Translate API to translate text between languages.
+Translates text between 30+ languages using the Google Translate free API endpoint.
 
-## Features
-- Translate text between 30+ languages
-- Supports language name or code input
-- Saves translations to file
-- URL encoding for special characters
+## How It Works
 
-## Supported Languages
-Arabic (ar), Spanish (es), French (fr), German (de), Italian (it), Portuguese (pt), Russian (ru), Chinese (zh), Japanese (ja), Korean (ko), Hindi (hi), Bengali (bn), Punjabi (pa), Tamil (ta), Telugu (te), Urdu (ur), Malayalam (ml), Kannada (kn), Gujarati (gu), Oriya (or), Marathi (mr), Assamese (as), Dutch (nl), English (en), Catalan (ca), Burmese (my), Estonian (et), Finnish (fi), Galician (gl), Georgian (ka)
+Console app. User enters source language, target language, and text. The program constructs a Google Translate URL, fetches the result via libcurl, parses the response, and displays the translated text. Results are also saved to `Translation.txt`.
 
-## Requirements
-- libcurl
-- CS50 library
+## Build
 
-## Setup
 ```bash
 make
+make run
 ```
-
-## Usage
-```bash
-./Translator.exe  # Windows
-./Translator      # Linux
-```
-
-Enter source language, target language, and text to translate.
-
-## Notes
-- Translations are saved to `Translation.txt`
-- Uses Google Translate free API endpoint

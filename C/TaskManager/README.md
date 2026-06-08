@@ -1,37 +1,14 @@
-# Task Manager
+# TaskManager
 
-A simple to-do list application built with Raylib.
+A graphical to-do list application built with Raylib.
 
-## Features
-- Add new tasks
-- Mark tasks as done (left-click on checkbox)
-- Remove tasks (right-click on checkbox)
-- Visual checkbox indicators
-- Maximum of 12 tasks
+## How It Works
 
-## Requirements
-- Raylib library
-- Standard C libraries
+Type a task and press Enter to add it (max 12 tasks). Left-click the checkbox to toggle completion, right-click to remove a task. Tasks are displayed in a scrollable list with visual checkbox indicators. In-memory only — no file persistence.
 
-## Setup
+## Build
+
 ```bash
 make
+make run
 ```
-
-## Usage
-```bash
-./TM.exe  # Windows
-./TM      # Linux
-```
-
-## Controls
-- **Type**: Enter task text
-- **Enter**: Add task to list
-- **Backspace**: Delete last character
-- **Left Click (on checkbox)**: Toggle task completion
-- **Right Click (on checkbox)**: Remove task
-
-## Notes
-- Tasks are stored in memory only (not persistent)
-- Maximum task limit is 12 items
-- Done tasks show as filled checkboxes

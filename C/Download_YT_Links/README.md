@@ -1,41 +1,16 @@
-# YouTube Media Downloader
+# Download_YT_Links
 
-A C program to download YouTube videos and audio in various formats (MP4, MP3, WAV) using yt-dlp and play them with mpv.
+Downloads YouTube videos and audio (MP4, MP3, WAV) using yt-dlp and plays them with mpv.
 
-## Features
-- Download YouTube videos as MP4
-- Extract audio as MP3 or WAV
-- Automatic dependency installation (yt-dlp and mpv)
-- File naming to avoid overwrites
-- Play downloaded media immediately after download
-- Cross-platform support (Linux and Windows)
+## How It Works
 
-## Requirements
-- yt-dlp
-- mpv
-- CS50 library (for get_string function)
+Menu-driven console app. Validates YouTube URLs, constructs yt-dlp commands, and executes them via the system shell. Downloaded files are saved to a `Music/` directory with unique sequential names. Optionally plays downloaded files with mpv.
 
-## Setup
-1. Install dependencies manually or let the program install them:
-   - Linux: yt-dlp and mpv
-   - Windows: yt-dlp and mpv via winget
+## Build
 
-2. Compile the program:
-   ```bash
-   gcc Download_YT_Links.c -o Download_YT_Links.exe -lcs50
-   ```
-
-## Usage
 ```bash
-./Download_YT_Links.exe
+make
+make run
 ```
-Choose an option from the menu:
-1. Download MP4 Video
-2. Download MP3 Audio
-3. Download WAV Audio
-4. Exit
 
-## Notes
-- The program creates a "Music" directory to store downloaded files
-- Files are named sequentially to avoid overwrites (video0.mp4, video1.mp4, etc.)
-- After downloading, you can choose to play the file immediately
+Requires `yt-dlp` and `mpv` installed on your system.

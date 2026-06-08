@@ -6,7 +6,6 @@ extern "C" {
 }
 
 #include "Game.hpp"
-#include "Quit.hpp"
 #include "UI.hpp"
 #include <SDL2/SDL_ttf.h>
 #include <iostream>
@@ -237,8 +236,6 @@ void Game::Main_Loop() {
     return;
   }
 
-  SDL_SetWindowIcon(ui->window, ui->icon);
-
   bool IsRunning = true;
   Uint64 startTime = SDL_GetPerformanceCounter();
   Uint64 frequency = SDL_GetPerformanceFrequency();
@@ -257,5 +254,4 @@ void Game::Main_Loop() {
     Game_Update(Current_Pos);
   }
   Cleanup_Sound();
-  Quit(ui->window, ui->renderer);
 }

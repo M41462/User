@@ -44,6 +44,14 @@ desktop.ini
 stb_image.h
 stb_image_write.h
 
+# Build directories
+build/
+cmake-build*/
+CMakeCache.txt
+cmake_install.cmake
+*.ninja
+*.obj.d
+
 # Project specific
 Translation.txt
 Score.txt

@@ -1,40 +1,14 @@
-# Space Shooter Game
+# Game
 
-My first C++ game - a space shooter with aliens and lasers.
+A space shooter — control a spaceship, shoot lasers at descending aliens, and survive as long as possible.
 
-## Features
-- Player-controlled spaceship
-- Laser shooting mechanics
-- Multiple alien enemy types
-- Collision detection
-- Score tracking with high score persistence
-- Sound effects (laser, explosion)
-- Lives system
+## How It Works
 
-## Requirements
-- Raylib library
+Raylib renders a 700×650 game window. Move with arrow keys, shoot with Space (with cooldown). Aliens descend in waves — shooting one adds to your score. Collision with an alien ends the game. High score is persisted to `Score.txt`. Includes laser and explosion sound effects and a custom font.
 
-## Setup
+## Build
+
 ```bash
-cd src
-make
+cd src && make
+make run
 ```
-
-## Usage
-```bash
-./main.exe  # Windows
-./main      # Linux
-```
-
-## Controls
-- **Arrow Keys**: Move spaceship
-- **Space**: Shoot laser
-- **ESC/Q**: Quit game
-
-## Notes
-- Score saved to `Score.txt`
-- Sound files needed in `../Sound/`
-- Image files needed in `../img/`
-- Font files needed in `../Font/`
-
-HAVE FUN ^-^

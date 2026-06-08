@@ -8,7 +8,7 @@ int main(int argc, char* argv[]) {
     (void)argv;
     
     UI ui;
-    const std::string fileName = ui.Menu();
+    std::string fileName = ui.Menu();
     
     MPlayer* mp = new (std::nothrow) MPlayer();
     if (!mp) {
@@ -16,7 +16,7 @@ int main(int argc, char* argv[]) {
         return EXIT_FAILURE;
     }
     
-    mp->LoadAndPlay(const_cast<std::string&>(fileName));
+    mp->LoadAndPlay(fileName);
     mp->Run();
     
     delete mp;

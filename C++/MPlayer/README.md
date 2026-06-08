@@ -1,62 +1,16 @@
-A simple command-line music player with a graphical interface that allows you to:
+# MPlayer
 
-Browse and select music files from your ~/Music directory
+A music player with an audio visualizer that browses and plays music from your `~/Music` directory.
 
-Play audio files (including converting MP4 to WAV)
+## How It Works
 
-Control playback with keyboard shortcuts
+Uses SFML for audio playback and graphics, and fzf for file selection. Supports MP4-to-WAV conversion via ffmpeg. Controls: Up/Down for volume, Left/Right for playback speed, M to mute, Space to play/pause, Q/Esc to quit. The visualizer renders real-time audio frequency bars.
 
-Features
-File selection using fzf (fuzzy finder)
+## Build
 
-Volume control (increase/decrease/mute)
+```bash
+cd src && make
+make run
+```
 
-Playback speed adjustment
-
-MP4 to WAV conversion
-
-Keyboard-controlled interface
-
-Dependencies
-fzf (for file selection)
-
-ffmpeg (for MP4 conversion)
-
-SFML library (for audio playback and GUI)
-
-Installation
-Install dependencies:
-
-bash
-sudo apt install fzf ffmpeg libsfml-dev
-Compile the program:
-
-bash
-g++ main.cpp UI.cpp MP.cpp -o music_player -lsfml-audio -lsfml-graphics -lsfml-window -lsfml-system
-Usage
-Run the program:
-
-bash
-./music_player
-Select a music file using the fuzzy finder interface
-
-Use keyboard controls:
-
-Up/Down: Volume control
-
-Left/Right: Playback speed
-
-M: Mute
-
-Space: Play/Pause
-
-Enter: Set volume to 70%
-
-Q/Escape: Quit
-
-
-
-
-
-
-
+Requires SFML, fzf, and ffmpeg installed.

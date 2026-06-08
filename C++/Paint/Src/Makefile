@@ -1,8 +1,9 @@
-CXX = clang++
+comma := ,
+CXX = g++
 CXXFLAGS = -std=c++17 -Wall -Wextra -I../Include
-LDFLAGS = -lSDL2 -lSDL2_image
+LDFLAGS = -lSDL2 -lSDL2_image -Wl$(comma)--subsystem$(comma)console
 
-SRC = $(wildcard *.cpp)
+SRC = main.cpp UI.cpp Brush.cpp Save.cpp
 EXEC = paint
 
 ifeq ($(OS),Windows_NT)

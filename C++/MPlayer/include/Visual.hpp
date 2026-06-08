@@ -5,9 +5,8 @@
 #include <SFML/Audio/SoundBuffer.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Time.hpp>
-#include <cmath>
-#include <ctime>
 
+#include <ctime>
 constexpr int WIDTH = 700;
 constexpr int HEIGHT = 600;
 constexpr int BAR_COUNT = 128;
@@ -20,7 +19,7 @@ public:
 
 private:
   sf::Color MakeColor(float loudness);
-  float CalculateAmplitude(float time, float frequency, int index);
+  float CalculateAmplitude(float time, int index);
 
   sf::RectangleShape Bars[BAR_COUNT];
   sf::RectangleShape Reflect[BAR_COUNT];

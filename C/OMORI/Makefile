@@ -1,5 +1,5 @@
-CXX = clang++
-CXXFLAGS = -std=c++17 -Wall -Wextra
+CC = clang
+CFLAGS = -std=c17 -Wall -Wextra
 LDFLAGS = -lraylib -lm -lopengl32 -lgdi32 -lwinmm
 
 SRC = WS.c
@@ -14,7 +14,7 @@ else
 endif
 
 all:
-	$(CXX) $(CXXFLAGS) $(SRC) -o $(EXEC) $(LDFLAGS)
+	$(CC) $(CFLAGS) $(SRC) -o $(EXEC) $(LDFLAGS)
 
 clean:
 	$(RM) $(EXEC)
