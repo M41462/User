@@ -12,4 +12,4 @@ typedef struct BlocksStruct {
 
 } BlocksStruct;
 
-#endif // BLOCKS_HPPBLOCKS_HPP
+#endif // BLOCKS_HPP
