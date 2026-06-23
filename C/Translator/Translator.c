@@ -1,16 +1,19 @@
 #include <cs50.h>
 #include <curl/curl.h>
 #include <curl/easy.h>
-#include <strings.h>
-
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <string.h>
 
 #define MAX_URL_LEN 512
 #define MAX_LANGUAGES 50
+
+#ifdef _WIN32
+#define strcasecmp _stricmp
+#endif
 
 typedef struct {
   char *memory;

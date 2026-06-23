@@ -1,15 +1,10 @@
 #pragma once
 
 #include <SFML/Audio.hpp>
-#include <SFML/Audio/Music.hpp>
 #include <SFML/Graphics.hpp>
-#include <SFML/Graphics/CircleShape.hpp>
-#include <SFML/Graphics/Color.hpp>
-#include <SFML/Graphics/Font.hpp>
-#include <SFML/Graphics/RectangleShape.hpp>
-#include <SFML/Graphics/RenderWindow.hpp>
-#include <SFML/System.hpp>
-#include <cstring>
+
+#include <memory>
+#include <string>
 
 #include "Visual.hpp"
 
@@ -17,11 +12,14 @@ class MPlayer {
 public:
   MPlayer();
   ~MPlayer();
+  MPlayer(const MPlayer &) = delete;
+  MPlayer &operator=(const MPlayer &) = delete;
+
   void Run();
-  bool Init_Music(std::string &musicpath);
-  bool If_File_MP4(const std::string &filepath);
-  std::string Convert_MP4_To_Wave(std::string &filepath);
-  void LoadAndPlay(std::string &filepath);
+  bool Init_Music(const std::string &musicpath);
+  static bool If_File_MP4(const std::string &filepath);
+  std::string Convert_MP4_To_Wave(const std::string &filepath);
+  void LoadAndPlay(const std::string &filepath);
   void Increase_Volume();
   void Decrease_Volume();
   void Increase_Speed();
@@ -35,15 +33,15 @@ private:
                       float x, float y);
 
   sf::Font font;
-  sf::Text *text = nullptr;
-  sf::Text *muteText = nullptr;
-  sf::Text *playText = nullptr;
+  std::unique_ptr<sf::Text> text;
+  std::unique_ptr<sf::Text> muteText;
+  std::unique_ptr<sf::Text> playText;
   Visual visual;
   const sf::Vector2i windowPosition = {350, 100};
   const sf::Color backgroundColor = {20, 20, 30, 255};
   std::string currentTrack;
-  sf::RenderWindow *window;
-  sf::Music *music;
+  sf::RenderWindow window;
+  sf::Music music;
   bool isRunning = false;
   bool muteMusic = false;
   float currentSpeed = 1.0f;

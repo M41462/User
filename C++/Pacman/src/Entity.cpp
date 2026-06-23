@@ -1,35 +1,20 @@
-#include <SFML/Audio/Sound.hpp>
-#include <SFML/Graphics/Color.hpp>
-#include <SFML/Graphics/RenderWindow.hpp>
-#include <SFML/Graphics/Text.hpp>
-
 #include <iostream>
+#include <sstream>
 #include <stdexcept>
 
 #include "../include/Entity.hpp"
-
-#include "GameState.hpp"
 
 namespace pacman {
 
 Entity::Entity()
     : pelletSound(pelletBuffer), powerPelletSound(powerPelletBuffer),
-      deathSound(deathBuffer), title(menuFont), playLabel(menuFont),
-      exitLabel(menuFont), scoreText(scoreFont), livesText(livesFont),
+      deathSound(deathBuffer), scoreText(scoreFont), livesText(livesFont),
       winText(winFont), loseText(loseFont), restartText(restartFont) {
   menuMusic.setVolume(30.f);
   pelletSound.setVolume(30.f);
   menuFont.setSmooth(true);
 
-  title.setPosition({330.f, 150.f});
-  playLabel.setPosition({370.f, 350.f});
-  exitLabel.setPosition({370.f, 550.f});
-
-  title.setString("PACMAN");
-  playLabel.setString("Play");
-  exitLabel.setString("Exit");
-
-  title.setFillColor(sf::Color::Green);
+  menuTexts = std::vector<sf::Text>(MAX_TEXT, sf::Text(menuFont));
 
   menuTexts[0].setString("PACMAN");
   menuTexts[1].setString("Play");
@@ -38,6 +23,8 @@ Entity::Entity()
   menuTexts[0].setPosition({330.f, 150.f});
   menuTexts[1].setPosition({370.f, 350.f});
   menuTexts[2].setPosition({370.f, 550.f});
+
+  menuTexts[0].setFillColor(sf::Color::Green);
 
   for (auto &t : menuTexts)
     t.setCharacterSize(40);
@@ -165,7 +152,7 @@ void Entity::drawUI(sf::RenderWindow &window, GameState &gameState,
   livesText.setString(ss.str());
   window.draw(livesText);
 
-  utils.handleMenuSelection(window, gameState, running, menuTexts);
+  utils.handleMenuSelection(window, gameState, running, menuTexts.data());
 }
 
 } // namespace pacman

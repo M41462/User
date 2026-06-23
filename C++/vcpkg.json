@@ -1,0 +1,12 @@
+{
+  "name": "cpp-projects",
+  "version-string": "1.0.0",
+  "dependencies": [
+    "raylib",
+    "sfml",
+    "sdl2",
+    "sdl2-image",
+    "sdl2-ttf",
+    "miniaudio"
+  ]
+}

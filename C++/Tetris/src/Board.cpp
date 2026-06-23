@@ -62,10 +62,10 @@ void Board::drawBox() {
   const int tickness = 5;
   const Vector2 boxPosition = {Constants::OFFSET + 280, Constants::OFFSET + 46};
 
-  const Rectangle rec = {.x = boxPosition.x - 60,
-                         .y = boxPosition.y - 40,
-                         .width = width,
-                         .height = height};
+  const Rectangle rec = {boxPosition.x - 60,
+                         boxPosition.y - 40,
+                         static_cast<float>(width),
+                         static_cast<float>(height)};
   DrawRectangleLinesEx(rec, tickness, WHITE);
 }
 

@@ -1,7 +1,7 @@
 #include <SFML/System/Clock.hpp>
-#include <cmath>
 
 #include <algorithm>
+#include <cmath>
 #include <limits>
 #include <random>
 #include <stdexcept>

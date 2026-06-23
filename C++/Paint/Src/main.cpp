@@ -1,14 +1,12 @@
+#include <numeric>
 #define SDL_MAIN_HANDLED
 #include <iostream>
-
 #include "../Include/UI.hpp"
 
 int main(int argc, char *argv[]) {
   (void)argv;
   (void)argc;
-
   UI ui;
-
   if (ui.Init_Window()) {
     ui.Run();
   } else {

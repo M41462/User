@@ -24,6 +24,7 @@
 *.exp
 
 # IDE/Editor
+.vs/
 .vscode/
 .idea/
 *.swp
@@ -47,13 +48,25 @@ stb_image_write.h
 # Build directories
 build/
 cmake-build*/
+
+# vcpkg installed dependencies (regenerable from vcpkg.json)
+vcpkg_installed/
+
+# Precompiled headers and ML model binaries
+*.ipch
+*.h5
+
+# CMake build artifacts
 CMakeCache.txt
 cmake_install.cmake
 *.ninja
 *.obj.d
 
+# Generated output
+output.png
+C++/Paint/Saves/
+
 # Project specific
 Translation.txt
 Score.txt
 UserData.txt
-output.png

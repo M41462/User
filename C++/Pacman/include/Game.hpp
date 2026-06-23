@@ -20,8 +20,8 @@ public:
   Game();
   ~Game();
 
-  constexpr unsigned int getWindowHeight() const { return SCREEN_HEIGHT; }
-  constexpr unsigned int getWindowWidth() const { return SCREEN_WIDTH; }
+  constexpr int getWindowHeight() const { return SCREEN_HEIGHT; }
+  constexpr int getWindowWidth() const { return SCREEN_WIDTH; }
 
   void run();
 
@@ -36,8 +36,8 @@ private:
 
   bool loseTriggered = false;
 
-  static constexpr unsigned int SCREEN_HEIGHT = 1078;
-  static constexpr unsigned int SCREEN_WIDTH = 896;
+  static constexpr int SCREEN_HEIGHT = 1078;
+  static constexpr int SCREEN_WIDTH = 896;
   static constexpr std::string_view SCREEN_TITLE = "PACMAN GAME";
   static constexpr int TARGET_FPS = 60;
 

@@ -1,6 +1,7 @@
-#include <cmath>
+#include <SFML/System/Time.hpp>
 
 #include <algorithm>
+#include <cmath>
 
 #include "Visual.hpp"
 

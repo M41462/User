@@ -1,5 +1,4 @@
 #include <cs50.h>
-#include <unistd.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,10 +29,7 @@ void get_unique_output(char *buffer, const char *extension) {
 
   for (int i = 0; i < 100; i++) {
     snprintf(buffer, MAX_PATH, "Music/video%d.%s", i, extension);
-    if (access(buffer, F_OK) != 0) {
-      return;
-    }
-  }
+ }
 
   snprintf(buffer, MAX_PATH, "./Music/default_output.%s", extension);
 }

@@ -1,3 +1,5 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <windows.h>
 #include <commdlg.h>
 
@@ -9,14 +11,13 @@
 std::string UI::Full_Path;
 
 std::string UI::Menu() {
-  OPENFILENAMEA ofn = {0};
-  char fileName[MAX_PATH] = {0};
+  OPENFILENAMEA ofn = {};
+  char fileName[MAX_PATH] = {};
 
   const char *userProfile = std::getenv("USERPROFILE");
   std::string initialDir = userProfile ? std::string(userProfile) + "\\Music" : "";
 
   ofn.lStructSize = sizeof(ofn);
-  ofn.hwndOwner = NULL;
   ofn.lpstrFilter = "Audio Files\0*.mp3;*.wav;*.flac;*.ogg;*.mp4\0All Files\0*.*\0";
   ofn.lpstrFile = fileName;
   ofn.nMaxFile = MAX_PATH;
@@ -25,7 +26,7 @@ std::string UI::Menu() {
 
   if (!GetOpenFileNameA(&ofn)) {
     std::cerr << "No file selected" << std::endl;
-    exit(1);
+    return "";
   }
 
   Full_Path = fileName;

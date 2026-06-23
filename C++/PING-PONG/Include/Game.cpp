@@ -8,6 +8,7 @@ extern "C" {
 #include "Game.hpp"
 #include "UI.hpp"
 #include <SDL2/SDL_ttf.h>
+#include <string>
 #include <iostream>
 
 static ma_engine engine;

@@ -1,9 +1,8 @@
 #include <cs50.h>
 #include <curl/curl.h>
 #include <curl/easy.h>
-#include <json-c/json.h>
-#include <strings.h>
-
+#include <cjson/cJSON.h>
+#include <string.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -15,6 +14,9 @@
 #define MAX_BUFFER_LEN 256
 #define NUM_ALGERIAN_CITIES 58
 
+#ifdef _MSC_VER
+#define strcasecmp _stricmp
+#endif
 typedef struct {
   char *buffer;
   size_t len;

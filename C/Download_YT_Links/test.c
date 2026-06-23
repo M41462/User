@@ -1,4 +1,3 @@
-#include <unistd.h>
 
 #include <stdbool.h>
 #include <stdio.h>
@@ -27,10 +26,6 @@ bool DownloadMusic(const char *URL, const char *FILE_PATH) {
     char output_file[MAX_FILENAME_LEN];
     snprintf(output_file, sizeof(output_file), "video%d.mp3", i);
 
-    if (access(output_file, F_OK) == 0) {
-      printf("%s already exists, skipping...\n", output_file);
-      continue;
-    }
 
     snprintf(command, sizeof(command),
              "yt-dlp \"%s\" -x --audio-format mp3 -o \"video%d.%%(ext)s\" > "

@@ -1,10 +1,5 @@
-#include <SFML/Graphics/Color.hpp>
-#include <SFML/Graphics/RenderWindow.hpp>
-#include <SFML/Graphics/Sprite.hpp>
-#include <SFML/System/Clock.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Keyboard.hpp>
-#include <SFML/Window/WindowBase.hpp>
 
 #include "../include/Pacman.hpp"
 

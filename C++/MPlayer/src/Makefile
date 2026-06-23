@@ -1,6 +1,6 @@
 CXX = clang++
 CXXFLAGS = -std=c++17 -Wall -Wextra -I../include
-LDFLAGS = -lsfml-audio -lsfml-graphics -lsfml-window -lsfml-system
+LDFLAGS = -lsfml-audio-3 -lsfml-graphics-3 -lsfml-window-3 -lsfml-system-3
 
 SRC = main.cpp ../include/UI.cpp ../include/MP.cpp ../include/Visual.cpp
 EXEC = music_player

@@ -1,8 +1,6 @@
-#include <SFML/Graphics/Text.hpp>
-#include <SFML/System/Vector2.hpp>
-#include <cstdio>
 #include <cstdlib>
 
+#include <algorithm>
 #include <iostream>
 #include <string>
 
@@ -65,35 +63,35 @@ void MPlayer::drawText(sf::RenderWindow &window) {
 }
 
 void MPlayer::Increase_Volume() {
-  const float currentVolume = music->getVolume();
+  const float currentVolume = music.getVolume();
   const float newVolume = std::min(currentVolume + VOLUME_STEP, MAX_VOLUME);
-  music->setVolume(newVolume);
+  music.setVolume(newVolume);
 
-  if (music->getVolume() >= MAX_VOLUME) {
+  if (newVolume >= MAX_VOLUME) {
     std::cout << "Volume : 200%(Max)" << std::endl;
   }
 }
 
 void MPlayer::Decrease_Volume() {
-  const float currentVolume = music->getVolume();
+  const float currentVolume = music.getVolume();
   const float newVolume = std::max(currentVolume - VOLUME_STEP, MIN_VOLUME);
-  music->setVolume(newVolume);
+  music.setVolume(newVolume);
 
-  if (music->getVolume() <= MIN_VOLUME) {
+  if (newVolume <= MIN_VOLUME) {
     std::cout << "Volume : 0%(Min)" << std::endl;
   }
 }
 
 void MPlayer::Mute_Volume() {
   if (muteMusic) {
-    music->setVolume(DEFAULT_VOLUME);
+    music.setVolume(DEFAULT_VOLUME);
   } else {
-    music->setVolume(MIN_VOLUME);
+    music.setVolume(MIN_VOLUME);
   }
   muteMusic = !muteMusic;
 }
 
-std::string MPlayer::Convert_MP4_To_Wave(std::string &filepath) {
+std::string MPlayer::Convert_MP4_To_Wave(const std::string &filepath) {
   wavFile = "temp.wav";
   isTempFile = true;
   const std::string command = "ffmpeg -i \"" + filepath + "\" " + wavFile;
@@ -105,32 +103,32 @@ std::string MPlayer::Convert_MP4_To_Wave(std::string &filepath) {
   return wavFile;
 }
 
-float MPlayer::Get_Volume() { return music->getVolume(); }
+float MPlayer::Get_Volume() { return music.getVolume(); }
 
 void MPlayer::Increase_Speed() {
-  if (!isRunning && muteMusic) {
+  if (!isRunning) {
     return;
   }
 
   if (currentSpeed == SPEED_SLOW) {
-    music->setPitch(SPEED_NORMAL);
+    music.setPitch(SPEED_NORMAL);
     currentSpeed = SPEED_NORMAL;
   } else {
-    music->setPitch(SPEED_FAST);
+    music.setPitch(SPEED_FAST);
     currentSpeed = SPEED_FAST;
   }
 }
 
 void MPlayer::Decrease_Speed() {
-  if (!isRunning && muteMusic) {
+  if (!isRunning) {
     return;
   }
 
   if (currentSpeed == SPEED_FAST) {
-    music->setPitch(SPEED_NORMAL);
+    music.setPitch(SPEED_NORMAL);
     currentSpeed = SPEED_NORMAL;
   } else {
-    music->setPitch(SPEED_SLOW);
+    music.setPitch(SPEED_SLOW);
     currentSpeed = SPEED_SLOW;
   }
 }
@@ -139,37 +137,25 @@ bool MPlayer::If_File_MP4(const std::string &filepath) {
   return filepath.size() > 4 && filepath.substr(filepath.size() - 4) == ".mp4";
 }
 
-bool MPlayer::Init_Music(std::string &musicpath) {
-  if (If_File_MP4(musicpath)) {
-    musicpath = Convert_MP4_To_Wave(musicpath);
+bool MPlayer::Init_Music(const std::string &musicpath) {
+  std::string path = musicpath;
+  if (If_File_MP4(path)) {
+    path = Convert_MP4_To_Wave(path);
   }
 
-  if (!music->openFromFile(musicpath)) {
-    std::cerr << "Failed to load music file: " << musicpath << std::endl;
+  if (!music.openFromFile(path)) {
+    std::cerr << "Failed to load music file: " << path << std::endl;
     return false;
   }
-  music->setVolume(DEFAULT_VOLUME);
+  music.setVolume(DEFAULT_VOLUME);
   return true;
 }
 
-MPlayer::MPlayer()
-    : window(nullptr), music(nullptr), isRunning(false),
-      currentSpeed(SPEED_NORMAL) {
-  window = new sf::RenderWindow;
-  music = new sf::Music;
-}
+MPlayer::MPlayer() : isRunning(false), currentSpeed(SPEED_NORMAL) {}
 
 MPlayer::~MPlayer() {
-  delete text;
-  delete muteText;
-  delete playText;
-  if (window) {
-    window->close();
-    delete window;
-  }
-  if (music) {
-    music->stop();
-    delete music;
+  if (music.getStatus() == sf::Music::Status::Playing) {
+    music.stop();
   }
 
   if (isTempFile && !wavFile.empty()) {
@@ -181,39 +167,38 @@ MPlayer::~MPlayer() {
   }
 }
 
-void MPlayer::LoadAndPlay(std::string &filepath) {
-  if (!Init_Music(filepath)) {
+void MPlayer::LoadAndPlay(const std::string &filepath) {
+  std::string path = filepath;
+  if (If_File_MP4(path)) {
+    path = Convert_MP4_To_Wave(path);
+  }
+
+  if (!Init_Music(path)) {
     std::cerr << "Error initializing music" << std::endl;
     return;
   }
 
-  if (If_File_MP4(filepath)) {
-    mp4File = Convert_MP4_To_Wave(filepath);
-    LoadAndPlay(mp4File);
-    return;
-  }
-
-  currentTrack = filepath;
-  music->play();
+  currentTrack = path;
+  music.play();
   isRunning = true;
 }
 
 void MPlayer::Run() {
-  std::system("clear");
-  text = new sf::Text(font);
-  muteText = new sf::Text(font);
-  playText = new sf::Text(font);
+  std::system("cls");
+  text = std::make_unique<sf::Text>(font);
+  muteText = std::make_unique<sf::Text>(font);
+  playText = std::make_unique<sf::Text>(font);
 
-  window->create(sf::VideoMode(sf::Vector2u(700, 600)), "MUSIC PLAYER",
-                 sf::Style::Titlebar | sf::Style::Close);
-  window->setPosition(windowPosition);
-  window->setFramerateLimit(60);
+  window.create(sf::VideoMode(sf::Vector2u(700, 600)), "MUSIC PLAYER",
+                sf::Style::Titlebar | sf::Style::Close);
+  window.setPosition(windowPosition);
+  window.setFramerateLimit(60);
   visual.Set_Visual();
 
-  while (window->isOpen() && music->getStatus() != sf::Music::Status::Stopped) {
-    while (const auto event = window->pollEvent()) {
+  while (window.isOpen() && music.getStatus() != sf::Music::Status::Stopped) {
+    while (const auto event = window.pollEvent()) {
       if (event->is<sf::Event::Closed>()) {
-        window->close();
+        window.close();
         break;
       }
       if (const auto *keyEvent = event->getIf<sf::Event::KeyPressed>()) {
@@ -235,19 +220,19 @@ void MPlayer::Run() {
           break;
         case sf::Keyboard::Key::Space:
           if (isRunning) {
-            music->pause();
+            music.pause();
           } else {
-            music->play();
+            music.play();
           }
           isRunning = !isRunning;
           break;
         case sf::Keyboard::Key::Escape:
         case sf::Keyboard::Key::Q:
           std::cout << "Exiting ..." << std::endl;
-          window->close();
+          window.close();
           break;
         case sf::Keyboard::Key::Enter:
-          music->setVolume(70.0f);
+          music.setVolume(70.0f);
           break;
         default:
           break;
@@ -255,10 +240,10 @@ void MPlayer::Run() {
       }
     }
 
-    window->clear(backgroundColor);
-    visual.Draw_Visual(*window);
-    drawText(*window);
-    visual.Update_Visual(*music);
-    window->display();
+    window.clear(backgroundColor);
+    visual.Draw_Visual(window);
+    drawText(window);
+    visual.Update_Visual(music);
+    window.display();
   }
 }

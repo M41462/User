@@ -21,10 +21,12 @@
 
 #include <assert.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 #include "TinyPngOut.h"
 
 static const uint16_t DEFLATE_MAX_BLOCK_SIZE = 65535;
+
 
 static bool write(struct TinyPngOut this[static 1], const uint8_t data[],
                   size_t len);

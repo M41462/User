@@ -4,14 +4,10 @@
 #include "GameState.hpp"
 #include "Utils.hpp"
 #include <SFML/Audio.hpp>
-#include <SFML/Audio/Music.hpp>
-#include <SFML/Audio/Sound.hpp>
-#include <SFML/Audio/SoundBuffer.hpp>
 #include <SFML/Graphics.hpp>
-#include <SFML/Graphics/Font.hpp>
-#include <SFML/Graphics/RenderWindow.hpp>
-#include <SFML/Graphics/Text.hpp>
+
 #include <string>
+#include <vector>
 
 enum class Direction { DOWN = 0, LEFT, RIGHT, UP, NONE };
 
@@ -52,10 +48,7 @@ private:
   sf::Sound deathSound;
   sf::Font menuFont;
   sf::Font scoreFont;
-  sf::Text title;
-  sf::Text playLabel;
-  sf::Text exitLabel;
-  sf::Text menuTexts[MAX_TEXT] = {title, playLabel, exitLabel};
+  std::vector<sf::Text> menuTexts;
   sf::Text scoreText;
   sf::Text livesText;
   sf::Font livesFont;

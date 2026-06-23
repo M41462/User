@@ -1,7 +1,6 @@
 #include <raylib.h>
 
 #include <stdbool.h>
-#include <stdio.h>
 #include <string.h>
 
 #define SCREEN_WIDTH 600

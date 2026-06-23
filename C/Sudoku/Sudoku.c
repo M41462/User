@@ -1,5 +1,4 @@
 #include <cs50.h>
-#include <unistd.h>
 
 #include <stdbool.h>
 #include <stdio.h>

@@ -30,12 +30,12 @@ public:
   sf::Vector2i worldToTile(const sf::Vector2f &worldPosition) const;
   sf::Vector2f tileToWorldCenter(const sf::Vector2i &tile) const;
   bool isWalkableTile(const sf::Vector2i &tile) const;
-  constexpr unsigned int getCellSize() const { return CELL_SIZE; }
+  constexpr int getCellSize() const { return CELL_SIZE; }
 
 private:
-  static constexpr unsigned int MAP_WIDTH = 28;
-  static constexpr unsigned int MAP_HEIGHT = 31;
-  static constexpr unsigned int CELL_SIZE = 32;
+  static constexpr int MAP_WIDTH = 28;
+  static constexpr int MAP_HEIGHT = 31;
+  static constexpr int CELL_SIZE = 32;
 
   sf::RectangleShape wall;
   sf::CircleShape pellet;

@@ -1,12 +1,13 @@
-#include <TinyPngOut.h>
 #include <cs50.h>
-#include <qrcodegen/qrcodegen.h>
 
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "TinyPngOut.h"
+#include "qrcodegen.h"
 
 #define SCALE 10
 #define MAX_MASK_NUMBER 7
@@ -49,7 +50,6 @@ bool create_qrcode_image(struct TinyPngOut *writer, uint8_t *qr, int size) {
     for (int x = 0; x < size * SCALE; x++) {
       bool color = qrcodegen_getModule(qr, x / SCALE, y / SCALE);
       uint8_t *pixel_color = color ? black_color : white_color;
-
       if (TinyPngOut_write(writer, pixel_color, 1) != TINYPNGOUT_OK) {
         fprintf(stderr, "Error writing PNG data\n");
         return false;

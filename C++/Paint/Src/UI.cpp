@@ -104,7 +104,7 @@ void UI::Event_Handler(SDL_Event &ev, bool &running) {
 
 void UI::Init_Color_Box() {
   for (int i = 0; i < NUM_COLORS; i++) {
-    rects[i] = {.x = (float)i * 50, .y = 0, .w = 50, .h = 50};
+    rects[i] = {static_cast<float>(i) * 50.0f, 0.0f, 50.0f, 50.0f};
   }
 }
 

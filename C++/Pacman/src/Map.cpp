@@ -1,10 +1,3 @@
-#include <SFML/Graphics/CircleShape.hpp>
-#include <SFML/Graphics/Rect.hpp>
-#include <SFML/Graphics/Sprite.hpp>
-#include <SFML/System/Vector2.hpp>
-
-#include <vector>
-
 #include "../include/Map.hpp"
 
 namespace pacman {
@@ -100,8 +93,11 @@ bool Map::checkWallCollision(sf::Sprite &shape) {
   for (int y = 0; y < MAP_HEIGHT; y++) {
     for (int x = 0; x < MAP_WIDTH; x++) {
       if (map[y][x] == '#') {
-        sf::FloatRect wallBounds(sf::Vector2f(x * CELL_SIZE, y * CELL_SIZE),
-                                 sf::Vector2f(CELL_SIZE, CELL_SIZE));
+        sf::FloatRect wallBounds(
+            sf::Vector2f(static_cast<float>(x * CELL_SIZE),
+                         static_cast<float>(y * CELL_SIZE)),
+            sf::Vector2f(static_cast<float>(CELL_SIZE),
+                         static_cast<float>(CELL_SIZE)));
         if (shape.getGlobalBounds().findIntersection(wallBounds)) {
           return true;
         }

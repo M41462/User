@@ -4,6 +4,7 @@
 
 int main(int argc, char *argv[]) {
   Game game;
+  
   try {
     game.run();
   } catch (const std::runtime_error &e) {

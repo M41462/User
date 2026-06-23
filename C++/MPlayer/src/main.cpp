@@ -1,24 +1,19 @@
 #include "../include/MP.hpp"
 #include "../include/UI.hpp"
-#include <iostream>
 #include <cstdlib>
+#include <iostream>
 
-int main(int argc, char* argv[]) {
-    (void)argc;
-    (void)argv;
-    
+int main() {
     UI ui;
     std::string fileName = ui.Menu();
     
-    MPlayer* mp = new (std::nothrow) MPlayer();
-    if (!mp) {
-        std::cerr << "Memory allocation failed" << std::endl;
+    if (fileName.empty()) {
         return EXIT_FAILURE;
     }
     
-    mp->LoadAndPlay(fileName);
-    mp->Run();
+    MPlayer mp;
+    mp.LoadAndPlay(fileName);
+    mp.Run();
     
-    delete mp;
     return EXIT_SUCCESS;
 }

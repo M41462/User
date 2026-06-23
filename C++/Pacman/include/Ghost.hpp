@@ -12,7 +12,7 @@
 #include <random>
 #include <vector>
 
-constexpr unsigned int MAX_GHOSTS = 4;
+constexpr int MAX_GHOSTS = 4;
 enum class GhostMode { SCATTER, CHASE, FRIGHTENED };
 
 namespace pacman {

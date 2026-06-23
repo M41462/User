@@ -1,21 +1,14 @@
-#include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/System/Time.hpp>
 #include <SFML/System/Vector2.hpp>
-#include <SFML/Window/Event.hpp>
 #include <SFML/Window/Keyboard.hpp>
-#include <SFML/Window/Window.hpp>
-#include <SFML/Window/WindowEnums.hpp>
 
-#include <exception>
 #include <iostream>
 #include <optional>
 #include <stdexcept>
 #include <vector>
 
 #include "../include/Game.hpp"
-
-#include "GameState.hpp"
 
 namespace pacman {
 
@@ -46,44 +39,44 @@ Game::~Game() { window.close(); }
 void Game::loadGameResources() {
   try {
     entity.setWindowIcon(window);
-  } catch (const std::exception &e) {
-    std::cerr << "Warning: " << e.what() << " (no icon)" << std::endl;
+  } catch (const std::exception &) {
+    std::cerr << "Warning: (no icon)" << std::endl;
   }
   try {
     pacman.loadTextures();
-  } catch (const std::exception &e) {
+  } catch (const std::exception &) {
     std::cerr << "Error loading pacman texture" << std::endl;
   }
   try {
     ghosts.loadTextures();
-  } catch (const std::exception &e) {
+  } catch (const std::exception &) {
     std::cerr << "Error loading ghosts texture" << std::endl;
   }
   try {
     entity.loadMenuMusic();
     entity.playMenuMusic();
-  } catch (const std::exception &e) {
-    std::cerr << "Warning: " << e.what() << std::endl;
+  } catch (const std::exception &) {
+    std::cerr << "Warning: failed to load music" << std::endl;
   }
   try {
     entity.loadPelletSound();
-  } catch (const std::exception &e) {
+  } catch (const std::exception &) {
     std::cerr << "Game will run without pellet sound" << std::endl;
   }
   try {
     entity.loadPowerPelletSound();
-  } catch (const std::exception &e) {
+  } catch (const std::exception &) {
     std::cerr << "Game will run without power pellet sound" << std::endl;
   }
   try {
     entity.loadDeathSound();
-  } catch (const std::exception &e) {
+  } catch (const std::exception &) {
     std::cerr << "Game will run without death sound" << std::endl;
   }
   try {
     entity.loadFonts();
-  } catch (const std::exception &e) {
-    std::cerr << "Warning: " << e.what() << " (no font)" << std::endl;
+  } catch (const std::exception &) {
+    std::cerr << "Warning: failed to load font" << std::endl;
   }
 }
 

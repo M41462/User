@@ -2,11 +2,8 @@
 #define VISUAL_HPP
 
 #include <SFML/Audio.hpp>
-#include <SFML/Audio/SoundBuffer.hpp>
 #include <SFML/Graphics.hpp>
-#include <SFML/System/Time.hpp>
 
-#include <ctime>
 constexpr int WIDTH = 700;
 constexpr int HEIGHT = 600;
 constexpr int BAR_COUNT = 128;

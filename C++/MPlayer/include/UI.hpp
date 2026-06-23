@@ -1,8 +1,5 @@
 #pragma once
 
-#ifndef UI_HPP
-#define UI_HPP
-
 #include <iostream>
 #include <string>
 
@@ -12,5 +9,3 @@ public:
   static std::string GetSelectedFile() { return Full_Path; }
   std::string Menu();
 };
-
-#endif
