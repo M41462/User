@@ -2,6 +2,7 @@
 #include <SFML/Window/Keyboard.hpp>
 
 #include "../include/Pacman.hpp"
+#include "Entity.hpp"
 
 namespace pacman {
 
@@ -43,6 +44,8 @@ void Pacman::render(sf::RenderWindow &window) {
   case Direction::UP:
     textureIndex = 3;
     break;
+  case Direction::NONE: 
+    break; 
   default:
     break;
   }

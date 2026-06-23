@@ -1,5 +1,4 @@
 #include "../include/Map.hpp"
-
 namespace pacman {
 //clang-format off
 const std::vector<std::string> Map::DEFAULT_MAP = {

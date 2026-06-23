@@ -166,7 +166,7 @@ void Game::processEvents(const std::optional<sf::Event> event, bool &running) {
 void Game::update(float dt) {
   sf::Vector2f oldPacmanPos = pacman.getPosition();
   std::vector<sf::Vector2f> oldGhostPositions(MAX_GHOSTS);
-  for (int i = 0; i < MAX_GHOSTS; i++)
+  for (unsigned int i = 0; i < MAX_GHOSTS; i++)
     oldGhostPositions[i] = ghosts.getPosition(i);
 
   pacman.update(dt, TARGET_FPS, gameState);
@@ -176,7 +176,7 @@ void Game::update(float dt) {
   if (map.checkWallCollision(pacman.getSprite())) {
     pacman.setPosition(oldPacmanPos);
   }
-  for (int i = 0; i < MAX_GHOSTS; i++) {
+  for (unsigned int i = 0; i < MAX_GHOSTS; i++) {
     if (map.checkWallCollision(ghosts.getSprite(i))) {
       ghosts.setPosition(i, oldGhostPositions[i]);
     }
